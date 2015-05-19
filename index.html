@@ -8,28 +8,24 @@
 
 		<script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
 		<script src="http://code.jquery.com/jquery-1.11.1.js"></script>
-		<!-- client behaviour js file 
-		<script type="text/javascript" src="script/client.js"></script>
--->
+		<!-- client behaviour js file -->
+		<script type="text/javascript">
+		var socket = io();
 
-		<script>
-			var socket = io();
+$('form').submit(function(){
+	socket.emit('chat message', $('#m').val());
+  	$('#m').val('');
+  	return false; // event.preventDefault();
+});
 
-			$('form').submit(function(){    
-				// socket.emit('chat message', $('#m').val());
-			 //  	$('#m').val('');
-			 //  	event.preventDefault();
-			  	return false;	
-			});
+socket.on('chat message', function(msg){
+  	$("#messages").append($("<li>").text(msg));
+});
 
-			socket.on('chat message', function(msg){
-			  	$("#messages").append($("<li>").text(msg));
-			});
-
-			socket.on('new user connected', function(){
-				$("#messages").append($("<li>")).append($("<red>").text("A new user is connected !"));
-			});
-		</script>
+socket.on('new user connected', function(){
+	$("#messages").append($("<li>")).append($("<red>").text("A new user is connected !"));
+})
+</script>
 
 		<!-- Chat Form -->
 		<ul id="messages"></ul>
