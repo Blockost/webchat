@@ -5,28 +5,12 @@
 	    <link rel="stylesheet" type="text/css" href="style/style.css">
 	</head>
 	<body>
-
+		
 		<script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
 		<script src="http://code.jquery.com/jquery-1.11.1.js"></script>
-		<!-- client behaviour js file -->
-		<script type="text/javascript">
-		var socket = io();
 
-$('form').submit(function(){
-	socket.emit('chat message', $('#m').val());
-  	$('#m').val('');
-  	return false; // event.preventDefault();
-});
-
-socket.on('chat message', function(msg){
-  	$("#messages").append($("<li>").text(msg));
-});
-
-socket.on('new user connected', function(){
-	$("#messages").append($("<li>")).append($("<red>").text("A new user is connected !"));
-})
-</script>
-
+		
+		
 		<!-- Chat Form -->
 		<ul id="messages"></ul>
 		<form action="">
@@ -34,6 +18,9 @@ socket.on('new user connected', function(){
 	  		<button>Send</button>
 		</form>
 
+
+		<!-- client behaviour js file -->
+		<script type="text/javascript" src="script/client.js"></script>
 
 	</body>
 </html>
