@@ -25,7 +25,6 @@ app.get('/test', function (req, res){
 });
 
 ///TODO Add rooms (channels)
-
 io.on('connection', function(socket){
 	// Attribute a random username to the client
 	//TODO Replace with real authentication
@@ -42,7 +41,7 @@ io.on('connection', function(socket){
 	// Client sent a message
 	socket.on('send_message', function(chat_message){
     	io.emit('message_received', chat_message);
- 	});
+ 	});	
 
 	// Client has disconnected
  	socket.on('disconnect', function(){
@@ -65,7 +64,6 @@ http.listen(3000, function(){
  * In order to update the channel_members div (right panel)
  */
 function sendMembersUpdate(){
-
 	io.emit('channel_members', allClients.map((socket) => {
 		return socket.username
 	}));

@@ -23,6 +23,10 @@ input{
 	padding:0.5%;
 }
 
+grey{
+	color: slategrey;
+}
+
 #message_form{
 	height:100%;
 }
@@ -49,6 +53,17 @@ input{
 
 .custom_panel{
 	padding:1%;
+}
+
+.msg_sender{
+	font-weight:bold;
+	font-size:18px;
+}
+
+.msg_time{
+	margin-left:0.5%;
+	font-style: italic;
+	color:slategrey;
 }
 
 @font-face {
