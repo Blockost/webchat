@@ -2,7 +2,7 @@
 	same as: var app = require('express')();
 */
 
-var express = require('express')
+let express = require('express');
 var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
@@ -10,8 +10,9 @@ var fs = require('fs');
 var url = require('url');
 var allClients = [];
 
-// public directory for external files
-app.use(express.static('public'));
+// routing
+app.use('/static', express.static(__dirname + '/static'));
+app.use('/node_modules', express.static(__dirname + '/node_modules'));
 
 app.get('/', function (req, res){
 	res.sendFile(__dirname+'/index.html');
@@ -23,34 +24,31 @@ app.get('/test', function (req, res){
 	res.end('request received at '+reqObj.pathname+"\n"+JSON.stringify(reqObj));
 });
 
+///TODO Add rooms (channels)
 
 io.on('connection', function(socket){
+	// Attribute a random username to the client
+	//TODO Replace with real authentication
+	let username = 'anonymous'+allClients.length+1;
+
+	socket.username = username;
+	socket.emit('username_set', username);
+
 	// Update clients array
 	allClients.push(socket);
-	// Add username to socket
-	socket.on('username choosen', function(username){
-		console.log(username);
-		socket.username = username;
-		// Send this message to all conected clients except the one that fires this event
-		socket.broadcast.emit('user connected', socket.username);
-		socket.emit('users list', function(err, data){
-			console.log(allClients);
-		});
-	});
-	
-	
 
+	sendMembersUpdate();
 	
-	socket.on('chat message', function(chat_message){
-    	io.emit('chat message', chat_message);
+	// Client sent a message
+	socket.on('send_message', function(chat_message){
+    	io.emit('message_received', chat_message);
  	});
 
-
-
-
+	// Client has disconnected
  	socket.on('disconnect', function(){
- 		socket.broadcast.emit('user disconnected', socket.username);
+ 		socket.broadcast.emit('user_disconnected', socket.username);
  		allClients.splice(allClients.indexOf(socket), 1);
+		sendMembersUpdate();
  	});
 
 });
@@ -60,5 +58,17 @@ io.on('connection', function(socket){
 http.listen(3000, function(){
 	console.log('Server running on *:3000');
 });
+
+
+/**
+ * Send all the member to clients
+ * In order to update the channel_members div (right panel)
+ */
+function sendMembersUpdate(){
+
+	io.emit('channel_members', allClients.map((socket) => {
+		return socket.username
+	}));
+}
 
 

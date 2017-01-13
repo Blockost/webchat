@@ -1,26 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-	    <title>Socket.IO chat</title>
-	    <link rel="stylesheet" type="text/css" href="style/style.css">
-	</head>
-	<body>
-		
-		<script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
-		<script src="http://code.jquery.com/jquery-1.11.1.js"></script>
-
-		
-		
-		<!-- Chat Form -->
-		<ul id="messages"></ul>
-		<form action="">
-	  		<input id="m" autocomplete="off" />
-	  		<button>Send</button>
-		</form>
+<head>
+    <title>Chat service</title>
+    <link rel="stylesheet" type="text/css" href="/static/css/style.css">
+    <link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.min.css">
+</head>
+<body>
 
 
-		<!-- client behaviour js file -->
-		<script type="text/javascript" src="script/client.js"></script>
+<div id="channel_selector" class="col-md-2 side_panel">
+</div>
+<div id="chat_panel" class="col-md-8">
+    <div id="messages_container" class="row custom_panel"></div>
+    <div id="message_bar" class="row custom_panel">
+        <form id="message_form" action="">
 
-	</body>
+            <input name="message_input" id="message_input" autofocus="true" autocomplete="false"
+                   placeholder="Say something interesting...">
+
+            </input>
+
+        </form>
+    </div>
+</div>
+<div id="channel_members" class="col-md-2 side_panel">
+    <p>Hello</p>
+</div>
+
+<!-- JS libraries -->
+<script src="/node_modules/socket.io-client/dist/socket.io.min.js"></script>
+<script src="/node_modules/jquery/dist/jquery.min.js"></script>
+
+<!-- client behaviour -->
+<script type="text/javascript" src="/static/js/client.js"></script>
+
+</body>
 </html>
