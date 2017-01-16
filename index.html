@@ -8,23 +8,41 @@
 <body>
 
 
-<div id="channel_selector" class="col-md-2 side_panel">
+<div id="channels" class="col-md-2 side_panel">
+
+    <h3>Select a channel:</h3>
+
+    <div class="channels_container custom_panel">
+        <div class="clickable">#general</div>
+        <div class="clickable">#flood</div>
+        <div class="clickable">#chatbot</div>
+    </div>
+
+    <div id="channel_creator" class="row custom_panel">
+        <form id="channel_form">
+
+            <input name="channel_input" id="channel_input" class="input" autocomplete="off"
+                   spellcheck="true" placeholder="Channel name (Ex: Flood, etc...)"/>
+
+        </form>
+    </div>
+
 </div>
 <div id="chat_panel" class="col-md-8">
     <div id="messages_container" class="row custom_panel"></div>
     <div id="message_bar" class="row custom_panel">
-        <form id="message_form" action="">
+        <form id="message_form">
 
-            <input name="message_input" id="message_input" autofocus="true" autocomplete="off"
-                   spellcheck="true" placeholder="Say something interesting...">
-
-            </input>
+            <input name="message_input" id="message_input" class="input" autofocus
+                   autocomplete="off" spellcheck="true" placeholder="Say something interesting..."/>
 
         </form>
     </div>
 </div>
 <div id="channel_members" class="col-md-2 side_panel">
-    <p>Hello</p>
+    <!-- //TODO Insert here current channel name -->
+    <h3>Members in #general</h3>
+    <div id="members"></div>
 </div>
 
 <!-- JS libraries -->
@@ -33,6 +51,7 @@
 
 <!-- client behaviour -->
 <script type="text/javascript" src="/static/js/client.js"></script>
+<script type="text/javascript" src="/static/js/message.js"></script>
 
 </body>
 </html>
