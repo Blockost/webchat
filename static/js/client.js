@@ -24,7 +24,9 @@ $('#message_form').submit((e) => {
         date: new Date()
     };
 
-    socket.emit('send_message', message);
+    if(message.text.trim() !== '')
+        socket.emit('send_message', message);
+
     $msg.val('');
 
     e.preventDefault();
@@ -56,7 +58,7 @@ socket.on('user_disconnected', function (username) {
 });
 
 socket.on('message_received', function (message) {
-    message = new Message(message);
+    message = new Message(message.from, message.text, message.date);
     buildMessage(message, last_message).appendTo('#messages_container');
     // Update last message received
     last_message = message;

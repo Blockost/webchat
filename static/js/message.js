@@ -1,8 +1,8 @@
 /**
  * Practical class for messages manipulation
- * @param from is the message's emitter
- * @param text is what the emitter wants to say
- * @param date is time emitter has sent this message
+ * @param {String} from is the message's emitter
+ * @param {String} text is what the emitter wants to say
+ * @param {Date} date is time emitter has sent this message
  * @constructor
  */
 function Message(from, text, date) {
@@ -10,23 +10,17 @@ function Message(from, text, date) {
     /****************/
     /* Constructors */
     /****************/
-    
-    if(typeof text === 'undefined'){
-        // Only one parameter passed
-        // Should a message primitive object
-        let _msg = from;
-        this.from = _msg.from;
-        this.text = _msg.text;
-        this.date = new Date(_msg.date);
-    } else {
-        // 3 params supplied
-        this.from = from;
-        this.text = text;
-        if (date instanceof Date)
-            this.date = date;
-        else
-            this.date = new Date(date);
-    }
+
+    if (typeof text === 'undefined')
+        text = '';
+
+    this.from = from;
+    this.text = text;
+    if (date instanceof Date)
+        this.date = date;
+    else
+        this.date = new Date(date);
+
 
     /*****************/
     /**** Methods ****/
@@ -48,9 +42,9 @@ function Message(from, text, date) {
             + ' (' + getTimeOnly(this.date) + '):\n'
             + this.text;
     };
-    
+
     /**
-     * Return time interval between this.date and 
+     * Return time interval between this.date and
      * another date object supplied as param
      * @param {Message} another_message
      * @returns {number} (this.date - another_message.date)
@@ -79,7 +73,7 @@ function getTimeOnly(date) {
         .split(' ')[0]
         .split(':')
         .filter((value, index) => {
-            if(index == 0 || index == 1)
+            if (index == 0 || index == 1)
                 return value;
         })
         .join(':')
