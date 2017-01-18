@@ -32,17 +32,16 @@ io.on('connection', function (socket) {
     //TODO Replace with real authentication ?
     socket.on('username_set', (username) => {
         socket.username = username + clients_pool.length;
+        sendMembersUpdate();
     });
-
 
     // Update clients array
     clients_pool.push(socket);
 
-    sendMembersUpdate();
 
     // Client sent a message
     socket.on('send_message', function (message) {
-        
+
         // No broadcast of empty messages
         if(message.text.trim() !== ''){
             message.from = socket.username;

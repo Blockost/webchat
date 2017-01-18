@@ -85,7 +85,3 @@ function buildAndAppendMessage(new_message, last_message, $message_container) {
 function scrollToBottom($div) {
     $div.scrollTop($div.prop('scrollHeight'));
 }
-
-
-
-
