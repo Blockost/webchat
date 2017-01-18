@@ -6,11 +6,11 @@ $('#channel_form').submit((e) => {
     //TODO Add channel '#$channel.val()';
 
     //socket.emit('add_channel', null);
-    
+
     e.preventDefault();
 });
 
-$('#message_form').submit((e) => {
+$('.message_form').submit((e) => {
 
     let $msg = $('#message_input');
 
@@ -24,13 +24,19 @@ $('#message_form').submit((e) => {
         date: new Date()
     };
 
-    if(message.text.trim() !== '')
+    if (message.text.trim() !== '')
         socket.emit('send_message', message);
 
     $msg.val('');
 
     e.preventDefault();
 });
+
+$('.messages_container').on('scroll');
+
+/*********************/
+/* Messages handling */
+/*********************/
 
 let $channel_members = $('#members');
 let $msg_container = $('#messages_container');
@@ -44,6 +50,7 @@ socket.on('username_set', (username) => {
 socket.on('channel_members', (members) => {
     $channel_members.empty();
     members.forEach((member) => {
+        //TODO Use jquery API for building DOM nodes, e.g, $('<div>').addClass().text()
         $channel_members.append('<div class="clickable">' + member + '</div>');
     });
 });
@@ -53,13 +60,13 @@ socket.on('user_connected', function (username) {
     $msg_container.append($("<p>").text("A new user is connected : \"" + username + "\""));
 });
 
-socket.on('user_disconnected', function (username) {
-    $msg_container.append($("<p>").text("\"" + username + "\" has disconnected"));
-});
-
 socket.on('message_received', function (message) {
+    let $message_container = $('.messages_container');
+
     message = new Message(message.from, message.text, message.date);
-    buildMessage(message, last_message).appendTo('#messages_container');
+    buildAndAppendMessage(message, last_message, $message_container);
+    // Scroll div to bottom
+    scrollToBottom($message_container);
     // Update last message received
     last_message = message;
 });
@@ -69,24 +76,31 @@ socket.on('message_received', function (message) {
  * or a shortly detailed message (text only)
  * @param {Message} new_message
  * @param {Message} last_message
- * @Return {Object} a jquery object 
+ * @Return {Object} a jquery object
  */
-function buildMessage(new_message, last_message) {
+function buildAndAppendMessage(new_message, last_message, $message_container) {
 
-    if(!(typeof last_message === 'undefined')){
+    /**
+     * Compare sender from previous and new messages
+     * Compare time
+     * If same sender and time diff <= 30s,
+     * append message to previous ones
+     */
+    if (!(typeof last_message === 'undefined')
+        && new_message.hasSameSourceThan(last_message)
+        && new_message.getTimeIntervalWith(last_message) <= 30000) {
 
-        /**
-         * Compare sender from previous and new messages
-         * Compare time
-         * If same sender and time diff <= 30s,
-         * append message to previous ones
-         */
-        if(new_message.hasSameSourceThan(last_message) 
-            && new_message.getTimeIntervalWith(last_message) <= 30000)
-            return new_message.getShortDetails();
+        new_message.buildShortMessage().appendTo('.msg_group:last');
+    } else {
+
+        new_message.buildFullMessage().appendTo($message_container);
     }
 
-    return new_message.getFullDetails();
+}
+
+
+function scrollToBottom($div) {
+    $div.scrollTop($div.prop('scrollHeight'));
 }
 
 

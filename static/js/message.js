@@ -27,14 +27,21 @@ function Message(from, text, date) {
     /*****************/
 
 
-    this.getShortDetails = () => {
+    this.buildShortMessage = () => {
         return $('<p>' + this.text + '</p>');
     };
 
-    this.getFullDetails = () => {
-        return $('<span class="msg_sender">' + this.from + '</span><span class="msg_time">'
-            + getTimeOnly(this.date) + '</span><br>'
-            + '<p>' + this.text + '</p>');
+    this.buildFullMessage = () => {
+
+        let $msg_group = $('<div>').addClass('msg_group')
+            .append($('<span>').addClass('msg_sender').text(this.from))
+            .append($('<span>').addClass('msg_time').text(getTimeOnly(this.date)))
+            .append($('<p>').text(this.text));
+
+        return $('<div>').addClass('msg_row')
+            .append($('<div>').addClass('avatar')
+                .append($('<div>').addClass('avatar_name').text('A')))
+            .append($msg_group);
     };
 
     this.toString = () => {

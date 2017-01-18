@@ -40,12 +40,13 @@ io.on('connection', function(socket){
 	
 	// Client sent a message
 	socket.on('send_message', function(chat_message){
+		//TODO /!\ Escape html chars to prevent script injection! /!\
+		//TODO Never trust user inputs !
     	io.emit('message_received', chat_message);
  	});	
 
 	// Client has disconnected
  	socket.on('disconnect', function(){
- 		socket.broadcast.emit('user_disconnected', socket.username);
  		allClients.splice(allClients.indexOf(socket), 1);
 		sendMembersUpdate();
  	});

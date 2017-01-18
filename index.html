@@ -4,25 +4,22 @@
     <title>Chat service</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro">
     <link rel="stylesheet" type="text/css" href="/static/css/style.css">
-    <link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.min.css">
 </head>
 <body>
 
-<div id="channels" class="side_panel">
-    <div class="header">
-        <h3>Hello</h3>
+<div id="channels">
+    <div class="channels_panel_header header">
+        <h3>Channels</h3>
     </div>
 
-    <div class="content">
-        <h3>Select a channel:</h3>
-
-        <div class="channels_container custom_panel">
+    <div class="channels_panel_content">
+        <div class="channels_container">
             <div class="clickable">#general</div>
             <div class="clickable">#flood</div>
             <div class="clickable">#chatbot</div>
         </div>
 
-        <div id="channel_creator" class="custom_panel">
+        <div class="channel_creator">
             <form id="channel_form">
 
                 <input name="channel_input" id="channel_input" class="input" autocomplete="off"
@@ -32,27 +29,39 @@
         </div>
     </div>
 </div>
-<div id="chat_panel" class="custom_panel">
-    <div class="header">
-        <h3>#Channel_name</h3>
+<div id="main_panel">
+    <div class="main_panel_header header">
+        <div>
+            <h3>#Channel_name</h3>
+        </div>
+        <div>
+            <h3>Options</h3>
+        </div>
     </div>
-    <div id="messages_container" class="custom_panel"></div>
-    <div id="message_bar" class="custom_panel">
-        <form id="message_form">
 
-            <input name="message_input" id="message_input" class="input" autofocus
-                   autocomplete="off" spellcheck="true" placeholder="Say something interesting..."/>
+    <div class="main_panel_content">
 
-        </form>
+        <div class="chat_panel">
+            <div class="messages_container">
+                <!-- Here will be all the chat messages -->
+            </div>
+            <div class="message_bar">
+                <form class="message_form">
+
+                    <input name="message_input" id="message_input" class="input" autofocus
+                           autocomplete="off" spellcheck="true" placeholder="Say something interesting..."/>
+
+                </form>
+            </div>
+        </div>
+
+        <div class="channel_members">
+            <!-- //TODO Insert here current channel name -->
+            <h3>Members in #general</h3>
+            <div id="members"></div>
+        </div>
     </div>
-</div>
-<div id="channel_members" class="side_panel">
-    <div class="header">
-        <h3>Options</h3>
-    </div>
-    <!-- //TODO Insert here current channel name -->
-    <h3>Members in #general</h3>
-    <div id="members"></div>
+
 </div>
 
 
