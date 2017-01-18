@@ -32,14 +32,12 @@ $('.message_form').submit((e) => {
     e.preventDefault();
 });
 
-$('.messages_container').on('scroll');
-
 /*********************/
 /* Messages handling */
 /*********************/
 
-let $channel_members = $('#members');
-let $msg_container = $('#messages_container');
+let $channel_members = $('.members');
+let $msg_container = $('.messages_container');
 let last_message;
 
 socket.on('username_set', (username) => {
@@ -50,23 +48,16 @@ socket.on('username_set', (username) => {
 socket.on('channel_members', (members) => {
     $channel_members.empty();
     members.forEach((member) => {
-        //TODO Use jquery API for building DOM nodes, e.g, $('<div>').addClass().text()
-        $channel_members.append('<div class="clickable">' + member + '</div>');
+        $channel_members.append($('<div>').addClass('clickable').text(member));
     });
 });
 
-
-socket.on('user_connected', function (username) {
-    $msg_container.append($("<p>").text("A new user is connected : \"" + username + "\""));
-});
-
 socket.on('message_received', function (message) {
-    let $message_container = $('.messages_container');
 
     message = new Message(message.from, message.text, message.date);
-    buildAndAppendMessage(message, last_message, $message_container);
+    buildAndAppendMessage(message, last_message, $msg_container);
     // Scroll div to bottom
-    scrollToBottom($message_container);
+    scrollToBottom($msg_container);
     // Update last message received
     last_message = message;
 });
