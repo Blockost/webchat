@@ -30,9 +30,8 @@ let $channel_members = $('.members');
 let $msg_container = $('.messages_container');
 let last_message;
 
-socket.on('username_set', (username) => {
-    socket.username = username;
-});
+let username = window.prompt("Username: ","Kévin");
+socket.emit('username_set', username);
 
 
 socket.on('channel_members', (members) => {

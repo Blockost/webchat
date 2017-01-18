@@ -28,12 +28,12 @@ app.get('/test', function (req, res) {
 
 ///TODO Add rooms (channels)
 io.on('connection', function (socket) {
-    // Attribute a random username to the client
-    //TODO Replace with real authentication
-    let username = 'anonymous' + clients_pool.length + 1;
 
-    socket.username = username;
-    socket.emit('username_set', username);
+    //TODO Replace with real authentication ?
+    socket.on('username_set', (username) => {
+        socket.username = username + clients_pool.length;
+    });
+
 
     // Update clients array
     clients_pool.push(socket);
