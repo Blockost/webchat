@@ -28,7 +28,7 @@ function Message(from, text, date) {
 
 
     this.buildShortMessage = () => {
-        return $('<p>' + this.text + '</p>');
+        return $('<p>').text(this.text);
     };
 
     this.buildFullMessage = () => {

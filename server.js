@@ -45,7 +45,7 @@ io.on('connection', function (socket) {
         // No broadcast of empty messages
         if(message.text.trim() !== ''){
             message.from = socket.username;
-            message.text = escapeHtmlChars(message.text);
+            message.text = message.text;
             message.date = new Date();
             io.emit('message_received', message);
         }
@@ -73,27 +73,6 @@ function sendMembersUpdate() {
     io.emit('channel_members', clients_pool.map((socket) => {
         return socket.username
     }));
-}
-
-
-/**
- * Escape all html chars in a string
- * @param {String} s string needed to be escaped
- * @returns {String} the escaped string
- */
-function escapeHtmlChars(s) {
-
-    let chars_matching = {
-        '&': '&amp;',
-        '"': '&quot;',
-        "'": '&#39;',
-        '<': '&lt;',
-        '>': '&gt;'
-    };
-
-    return s.replace(/[&"<>']/g,  (c) => {
-        return chars_matching[c];
-    });
 }
 
 
