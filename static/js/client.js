@@ -14,18 +14,8 @@ $('.message_form').submit((e) => {
 
     let $msg = $('#message_input');
 
-    // No need to create a Message class as this
-    // object will be serialized when it passes
-    // throughout the socket and because there is
-    // no server-side message processing
-    let message = {
-        from: socket.username,
-        text: $msg.val(),
-        date: new Date()
-    };
-
-    if (message.text.trim() !== '')
-        socket.emit('send_message', message);
+    let message = {text: $msg.val()};
+    socket.emit('send_message', message);
 
     $msg.val('');
 
@@ -53,7 +43,7 @@ socket.on('channel_members', (members) => {
 });
 
 socket.on('message_received', function (message) {
-
+    // Create a handful message object
     message = new Message(message.from, message.text, message.date);
     buildAndAppendMessage(message, last_message, $msg_container);
     // Scroll div to bottom
@@ -89,7 +79,10 @@ function buildAndAppendMessage(new_message, last_message, $message_container) {
 
 }
 
-
+/**
+ * Scroll a HTML object to the bottom end (if scrollable)
+ * @param {Object} $div JQuery scrollable div
+ */
 function scrollToBottom($div) {
     $div.scrollTop($div.prop('scrollHeight'));
 }
