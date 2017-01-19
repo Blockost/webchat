@@ -4,12 +4,13 @@
     <title>Chat service</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro">
     <link rel="stylesheet" type="text/css" href="/static/css/style.css">
+    <link rel="stylesheet" href="/node_modules/font-awesome/css/font-awesome.min.css">
 </head>
 <body>
 
 <div id="channels">
     <div class="channels_panel_header header">
-        <h3>Channels</h3>
+        <!-- Here will be user icon + username -->
     </div>
 
     <div class="channels_panel_content">
@@ -20,7 +21,7 @@
         </div>
 
         <div class="channel_creator">
-            <form id="channel_form">
+            <form class="channel_form">
 
                 <input name="channel_input" id="channel_input" class="input" autocomplete="off"
                        spellcheck="true" placeholder="Channel name (Ex: Flood, etc...)"/>
@@ -35,7 +36,9 @@
             <h3>#Channel_name</h3>
         </div>
         <div>
-            <button onclick="toogleSidenavLeft()">Options</button>
+            <button class="btn btn_active" onclick="togglePanel(this)">
+                <i class="fa fa-users" aria-hidden="true"></i>
+            </button>
         </div>
     </div>
 
@@ -55,10 +58,10 @@
             </div>
         </div>
 
-        <div class="channel_members sidenav_left">
+        <div class="channel_members">
             <!-- //TODO Insert here current channel name -->
-            <h3>Members in #general</h3>
-            <div class="members"></div>
+            <div class="members_online"></div>
+            <div class="members_list"></div>
         </div>
     </div>
 

@@ -3,9 +3,10 @@
  * @param {String} from is the message's emitter
  * @param {String} text is what the emitter wants to say
  * @param {Date} date is time emitter has sent this message
+ * @param {String} custom color attributed to @this user
  * @constructor
  */
-function Message(from, text, date) {
+function Message(from, text, date, color) {
 
     /****************/
     /* Constructors */
@@ -39,8 +40,9 @@ function Message(from, text, date) {
             .append($('<p>').text(this.text));
 
         return $('<div>').addClass('msg_row')
-            .append($('<div>').addClass('avatar')
-                .append($('<div>').addClass('avatar_name').text('A')))
+            //TODO Add custom color
+            .append($('<div>').addClass('avatar').css('background-color', color)
+                .append($('<div>').addClass('avatar_name').text(this.from.charAt(0))))
             .append($msg_group);
     };
 

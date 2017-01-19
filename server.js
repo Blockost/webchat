@@ -1,34 +1,59 @@
+/*********************/
+/* Libs stack ***/
+
 let express = require('express');
 let app = express();
 let http = require('http').Server(app);
 let io = require('socket.io')(http);
-let fs = require('fs');
-let url = require('url');
+
+/*********************/
+/**** Custom libs ****/
+/*********************/
+let utils = require('./static/js/utils');
+
+
+/*********************/
+/**** Variables ****/
+/*********************/
 let clients_pool = [];
 let channels_pool = ["general"];
+
 
 // routing
 app.use('/static', express.static(__dirname + '/static'));
 app.use('/node_modules', express.static(__dirname + '/node_modules'));
 
 
+/**
+ * Serve index page to browser
+ */
 app.get('/', function (req, res) {
     res.sendFile(__dirname + '/index.html');
 });
 
 
-app.get('/test', function (req, res) {
-    var reqObj = url.parse(req.url, true);
-    res.end('request received at ' + reqObj.pathname + "\n" + JSON.stringify(reqObj));
-});
-
-///TODO Add rooms (channels)
+/**
+ * On client's connection, do something...
+ */
 io.on('connection', function (socket) {
 
+    //TODO Add rooms (channels)
+    
     //TODO Replace with real authentication ?
     socket.on('username_set', (username) => {
-        socket.username = username + clients_pool.length;
+        if(username.trim() === '')
+            username = 'Anonymous';
+
+        username = username.charAt(0).toUpperCase()
+            + username.substr(1, username.length-1);
+        
+        socket.username = username;
+        socket.color = utils.getRandomColor();
+
         sendMembersUpdate();
+        
+        // Send updated username + 'unique' custom color
+        socket.emit('username_verified', [username, socket.color]);
     });
 
     // Update clients array
@@ -43,6 +68,7 @@ io.on('connection', function (socket) {
             message.from = socket.username;
             message.text = message.text;
             message.date = new Date();
+            message.color = socket.color;
             io.emit('message_received', message);
         }
     });
@@ -62,12 +88,12 @@ http.listen(3000, function () {
 
 
 /**
- * Send all members to clients
+ * Send all members (username + special color) to clients
  * In order to update the channel_members div (right panel)
  */
 function sendMembersUpdate() {
     io.emit('channel_members', clients_pool.map((socket) => {
-        return socket.username
+        return [socket.username, socket.color];
     }));
 }
 

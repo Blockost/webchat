@@ -26,24 +26,37 @@ $('.message_form').submit((e) => {
 /* Messages handling */
 /*********************/
 
-let $channel_members = $('.members');
 let $msg_container = $('.messages_container');
 let last_message;
 
-let username = window.prompt("Username: ","Kévin");
+let username = window.prompt("Username: ", "Kévin");
 socket.emit('username_set', username);
+
+socket.on('username_verified', (res) => {
+    let username = res[0];
+    let color = res[1];
+    
+    let channels_panel_header = $('.channels_panel_header');
+    channels_panel_header.append(buildUserRow(username, color));
+});
 
 
 socket.on('channel_members', (members) => {
-    $channel_members.empty();
+
+    let $members_list = $('.members_list');
+    let $members_online = $('.members_online');
+
+    $members_online.text('Online: ' + members.length);
+
+    $members_list.empty();
     members.forEach((member) => {
-        $channel_members.append($('<div>').addClass('clickable').text(member));
+        $members_list.append(buildUserRow(member[0], member[1]).addClass('clickable'));
     });
 });
 
 socket.on('message_received', function (message) {
     // Create a handful message object
-    message = new Message(message.from, message.text, message.date);
+    message = new Message(message.from, message.text, message.date, message.color);
     buildAndAppendMessage(message, last_message, $msg_container);
     // Scroll div to bottom
     scrollToBottom($msg_container);
@@ -84,4 +97,18 @@ function buildAndAppendMessage(new_message, last_message, $message_container) {
  */
 function scrollToBottom($div) {
     $div.scrollTop($div.prop('scrollHeight'));
+}
+
+
+/**
+ * Construct a user row (avatar + username) as a Jquery object (DOM Tree)
+ * @param username client's name
+ * @param color client's custom color
+ * @returns {Object} The created 'JQuery' DOM tree
+ */
+function buildUserRow(username, color) {
+    return $('<div>').addClass('user_row')
+        .append($('<div>').addClass('avatar').css('background-color', color)
+            .append($('<div>').addClass('avatar_name').text(username.charAt(0))))
+        .append($('<div>').addClass('user_name').text(username));
 }

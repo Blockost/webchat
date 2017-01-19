@@ -1,31 +1,20 @@
-function toogleSidenavLeft() {
-    let $sidenav_left = $('.sidenav_left');
+function togglePanel(btn) {
+    let $btn = $(btn);
+    let $channel_members = $('.channel_members');
     let $chat_panel = $('.chat_panel');
 
-    if ($sidenav_left.css('display') === 'none') {
+    if ($channel_members.css('display') === 'none') {
 
+        $btn.addClass('btn_active');
         // Show side_panel
-        $chat_panel.animate({
-            'width': '85%'
-        }, 500, () => {
-            $('.sidenav_left').css('display', 'flex');
+        $chat_panel.animate({'width': '85%'}, 500, () => {
+            $channel_members.css('display', 'flex');
         });
 
     } else {
+        $btn.removeClass('btn_active');
         // Hide sidenav
-        $('.sidenav_left').css('display', 'none');
-        $chat_panel.animate({
-            'width': '100%'
-        }, 500, () => {
-
-        });
+        $channel_members.css('display', 'none');
+        $chat_panel.animate({'width': '100%'}, 500);
     }
-}
-/**
- *
- * @param $div
- * @param percentage
- */
-function scaleDiv($div, percentage) {
-
 }
