@@ -1,7 +1,3 @@
-/* 
- same as: var app = require('express')();
- */
-
 let express = require('express');
 let app = express();
 let http = require('http').Server(app);
