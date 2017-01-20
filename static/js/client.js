@@ -1,12 +1,11 @@
 let socket = io();
 
-$('#channel_form').submit((e) => {
+$('.channel_form').submit((e) => {
 
     let $channel = $('#channel_input');
-    //TODO Add channel '#$channel.val()';
+    socket.emit('add_channel', $channel.val());
 
-    //socket.emit('add_channel', null);
-
+    $channel.val('');
     e.preventDefault();
 });
 
@@ -18,7 +17,6 @@ $('.message_form').submit((e) => {
     socket.emit('send_message', message);
 
     $msg.val('');
-
     e.preventDefault();
 });
 
@@ -32,16 +30,22 @@ let last_message;
 let username = window.prompt("Username: ", "Kévin");
 socket.emit('username_set', username);
 
-socket.on('username_verified', (res) => {
-    let username = res[0];
-    let color = res[1];
-    
+socket.on('username_verified', (user) => {
     let channels_panel_header = $('.channels_panel_header');
-    channels_panel_header.append(buildUserRow(username, color));
+    socket.username = user.name;
+    channels_panel_header.append(buildUserRow(user.name, user.color));
+});
+
+socket.on('channels_update', (channels) => {
+    let $channels_container = $('.channels_container');
+    $channels_container.empty();
+    channels.forEach((channel) => {
+        $channels_container.append(buildChannelRow(channel.name, channel.owner))
+    });
 });
 
 
-socket.on('channel_members', (members) => {
+socket.on('members_update', (members) => {
 
     let $members_list = $('.members_list');
     let $members_online = $('.members_online');
@@ -50,7 +54,7 @@ socket.on('channel_members', (members) => {
 
     $members_list.empty();
     members.forEach((member) => {
-        $members_list.append(buildUserRow(member[0], member[1]).addClass('clickable'));
+        $members_list.append(buildUserRow(member.name, member.color).addClass('clickable'));
     });
 });
 
@@ -85,7 +89,6 @@ function buildAndAppendMessage(new_message, last_message, $message_container) {
 
         new_message.buildShortMessage().appendTo('.msg_group:last');
     } else {
-
         new_message.buildFullMessage().appendTo($message_container);
     }
 
@@ -111,4 +114,13 @@ function buildUserRow(username, color) {
         .append($('<div>').addClass('avatar').css('background-color', color)
             .append($('<div>').addClass('avatar_name').text(username.charAt(0))))
         .append($('<div>').addClass('user_name').text(username));
+}
+
+
+function buildChannelRow(channel_name, channel_owner) {
+
+    console.log(channel_name);
+    //TODO Add rights to channel's owner (edit + delete)
+    return $('<div>').addClass('channel_row')
+        .append($('<div>').addClass('clickable').text(channel_name));
 }

@@ -10,13 +10,14 @@ let io = require('socket.io')(http);
 /**** Custom libs ****/
 /*********************/
 let utils = require('./static/js/utils');
+let Channel = require('./static/js/channel');
 
 
 /*********************/
 /**** Variables ****/
 /*********************/
 let clients_pool = [];
-let channels_pool = ["general"];
+let channels_pool = [new Channel('#general', 'root')];
 
 
 // routing
@@ -38,33 +39,34 @@ app.get('/', function (req, res) {
 io.on('connection', function (socket) {
 
     //TODO Add rooms (channels)
-    
+
     //TODO Replace with real authentication ?
     socket.on('username_set', (username) => {
-        if(username.trim() === '')
+        if (username.trim() === '')
             username = 'Anonymous';
 
         username = username.charAt(0).toUpperCase()
-            + username.substr(1, username.length-1);
-        
+            + username.substr(1, username.length - 1);
+
         socket.username = username;
         socket.color = utils.getRandomColor();
 
-        sendMembersUpdate();
-        
         // Send updated username + 'unique' custom color
-        socket.emit('username_verified', [username, socket.color]);
+        socket.emit('username_verified', {
+            name: username, color: socket.color
+        });
+
+        // Update clients array
+        clients_pool.push(socket);
+
+        sendMembersUpdate();
+        sendChannelsUpdate(socket);
     });
-
-    // Update clients array
-    clients_pool.push(socket);
-
 
     // Client sent a message
     socket.on('send_message', function (message) {
-
         // No broadcast of empty messages
-        if(message.text.trim() !== ''){
+        if (message.text.trim() !== '') {
             message.from = socket.username;
             message.text = message.text;
             message.date = new Date();
@@ -73,12 +75,31 @@ io.on('connection', function (socket) {
         }
     });
 
+    // Client wants to create a new channel
+    socket.on('add_channel', (channel_name) => {
+        channel_name = channel_name.trim();
+        if (channel_name !== '') {
+            let channel = new Channel(channel_name, socket.username);
+            channels_pool.push(channel);
+            sendChannelsUpdate();
+        }
+    });
+
+    socket.on('join_channel', (channel_name) => {
+        //TODO Check if channel exists
+        socket.join(channel_name);
+    });
+
+    socket.on('leave_channel', (channel_name) => {
+        //TODO Check if channel exists
+        socket.leave(channel_name);
+    });
+
     // Client has disconnected
     socket.on('disconnect', function () {
         clients_pool.splice(clients_pool.indexOf(socket), 1);
         sendMembersUpdate();
     });
-
 });
 
 
@@ -92,8 +113,22 @@ http.listen(3000, function () {
  * In order to update the channel_members div (right panel)
  */
 function sendMembersUpdate() {
-    io.emit('channel_members', clients_pool.map((socket) => {
-        return [socket.username, socket.color];
+    io.emit('members_update', clients_pool.map((socket) => {
+        return {name: socket.username, color: socket.color};
+    }));
+}
+
+
+function sendChannelsUpdate(socket) {
+    let sender = socket || io;
+
+    /**
+     * if a socket has been passed,
+     * send update to it.
+     * Broadcast otherwise
+     */
+    sender.emit('channels_update', channels_pool.map((channel) => {
+        return channel.toJSON();
     }));
 }
 
