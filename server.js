@@ -38,8 +38,6 @@ app.get('/', function (req, res) {
  */
 io.on('connection', function (socket) {
 
-    //TODO Add rooms (channels)
-
     //TODO Replace with real authentication ?
     socket.on('username_set', (username) => {
         if (username.trim() === '')
@@ -60,18 +58,33 @@ io.on('connection', function (socket) {
         clients_pool.push(socket);
 
         sendMembersUpdate();
+
+        // Automatically connect it to '#general' channel
+        socket.join(channels_pool[0].name);
+        socket.emit('channel_joined', channels_pool[0].toJSON());
+
         sendChannelsUpdate(socket);
     });
 
     // Client sent a message
-    socket.on('send_message', function (message) {
+    socket.on('message', function (message) {
+
+        //TODO Add message to channel's history
         // No broadcast of empty messages
-        if (message.text.trim() !== '') {
+        // or message sent to imaginary channel
+        let channel = getChannelByName(message.channel);
+
+        if (message.text.trim() !== '' && channel) {
             message.from = socket.username;
             message.text = message.text;
             message.date = new Date();
             message.color = socket.color;
-            io.emit('message_received', message);
+
+            // Add message to channel's history
+            channel.history.push(message);
+
+            // Broadcast to all clients in this channel
+            io.in(channel.name).send(message);
         }
     });
 
@@ -86,13 +99,37 @@ io.on('connection', function (socket) {
     });
 
     socket.on('join_channel', (channel_name) => {
-        //TODO Check if channel exists
-        socket.join(channel_name);
+        let channel = getChannelByName(channel_name);
+        if (channel) {
+            socket.join(channel_name);
+            socket.currentChannel = channel_name;
+            // Warn user that he has successfully joined this channel
+            // and send it its history
+            socket.emit('channel_joined', channel.toJSON());
+        }
     });
 
     socket.on('leave_channel', (channel_name) => {
-        //TODO Check if channel exists
-        socket.leave(channel_name);
+        let channel = getChannelByName(channel_name);
+        if (channel) {
+            socket.leave(channel_name);
+            socket.emit('channel_left', getChannelByName(channel_name).toJSON());
+        }
+    });
+
+    socket.on('delete_channel', (channel_name) => {
+        let channel = getChannelByName(channel_name);
+        if (channel) {
+            /*if(channel.owner === socket.username){
+             io.in(channel_name).emit('channel_deleted', channel_name);
+             io.sockets.in(channel_name).leave(channel_name);
+             //TODO Remove everybody from that channel
+             io.sockets.clients(channel_name).forEach(function(socket){
+             socket.leave(channel_name);
+             });
+             channels_pool.splice(getChannelByName(channel_name), 1);
+             }*/
+        }
     });
 
     // Client has disconnected
@@ -130,6 +167,18 @@ function sendChannelsUpdate(socket) {
     sender.emit('channels_update', channels_pool.map((channel) => {
         return channel.toJSON();
     }));
+}
+
+/**
+ * Retrieve a channel according to its name
+ * @param {string} name
+ * @returns {Channel}
+ */
+function getChannelByName(name) {
+    for (let channel of channels_pool) {
+        if (channel.name === name) return channel;
+    }
+    return null;
 }
 
 

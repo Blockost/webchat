@@ -142,6 +142,10 @@ body {
     overflow-y: auto;
 }
 
+.channel_name{
+    font-weight: bold;
+}
+
 .members_online {
     padding: 10px;
 }
@@ -220,6 +224,10 @@ body {
     background-color: transparent;
     border: 0;
     cursor: pointer;
+}
+
+.btn:hover{
+    color: white;
 }
 
 .btn_active {

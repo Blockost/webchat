@@ -1,30 +1,13 @@
 let socket = io();
-
-$('.channel_form').submit((e) => {
-
-    let $channel = $('#channel_input');
-    socket.emit('add_channel', $channel.val());
-
-    $channel.val('');
-    e.preventDefault();
-});
-
-$('.message_form').submit((e) => {
-
-    let $msg = $('#message_input');
-
-    let message = {text: $msg.val()};
-    socket.emit('send_message', message);
-
-    $msg.val('');
-    e.preventDefault();
-});
+socket.rooms = [];
 
 /*********************/
 /* Messages handling */
 /*********************/
 
 let $msg_container = $('.messages_container');
+let $channels_container = $('.channels_container');
+let $channel_name = $('.channel_name');
 let last_message;
 
 let username = window.prompt("Username: ", "Kévin");
@@ -37,7 +20,6 @@ socket.on('username_verified', (user) => {
 });
 
 socket.on('channels_update', (channels) => {
-    let $channels_container = $('.channels_container');
     $channels_container.empty();
     channels.forEach((channel) => {
         $channels_container.append(buildChannelRow(channel.name, channel.owner))
@@ -46,6 +28,8 @@ socket.on('channels_update', (channels) => {
 
 
 socket.on('members_update', (members) => {
+
+    //TODO display members according to current_channel
 
     let $members_list = $('.members_list');
     let $members_online = $('.members_online');
@@ -58,7 +42,10 @@ socket.on('members_update', (members) => {
     });
 });
 
-socket.on('message_received', function (message) {
+socket.on('message', (message) => {
+    //TODO If user is 'inside' the channel whose the message comes from, add it, otherwise, display notification on the side of the channel name
+    //TODO socket.currentChannel
+
     // Create a handful message object
     message = new Message(message.from, message.text, message.date, message.color);
     buildAndAppendMessage(message, last_message, $msg_container);
@@ -66,6 +53,37 @@ socket.on('message_received', function (message) {
     scrollToBottom($msg_container);
     // Update last message received
     last_message = message;
+});
+
+socket.on('channel_joined', (channel) => {
+    if (socket.rooms.indexOf(channel.name) == -1)
+        socket.rooms.push(channel.name);
+
+    socket.currentChannel = channel.name;
+
+    $channels_container.find('.channel_row[name="' + channel.name + '"]')
+        .replaceWith(buildChannelRow(channel.name, channel.owner));
+
+    // Update chat header
+    $channel_name.text(channel.name);
+
+    $msg_container.empty();
+    channel.history.forEach((message) => {
+        message = new Message(message.from, message.text, message.date, message.color);
+        buildAndAppendMessage(message, last_message, $msg_container);
+    });
+});
+
+socket.on('channel_left', (channel) => {
+    socket.rooms.splice(channel.name, 1);
+    $channels_container.find('.channel_row[name="' + channel.name + '"])')
+        .replaceWith(buildChannelRow(channel.name, channel.owner));
+});
+
+socket.on('channel_deleted', (channel) => {
+    socket.rooms.splice(channel.name, 1);
+    $channels_container.find('.clickable:contains("' + channel.name + '")')
+        .remove();
 });
 
 /**
@@ -119,8 +137,63 @@ function buildUserRow(username, color) {
 
 function buildChannelRow(channel_name, channel_owner) {
 
-    console.log(channel_name);
-    //TODO Add rights to channel's owner (edit + delete)
-    return $('<div>').addClass('channel_row')
-        .append($('<div>').addClass('clickable').text(channel_name));
+    let $clickable = $('<div>').addClass('clickable')
+        .text(channel_name).click(selectChannel);
+
+    // If socket is in the channel
+    // allows leaving it
+    if (socket.rooms.indexOf(channel_name) !== -1)
+        $clickable.append($('<btn>').addClass('btn').click(leaveChannel)
+            .append($('<i>').addClass('fa fa-external-link')));
+
+    // If socket is channel owner
+    // allows deleting it
+    if (channel_owner === socket.username)
+        $clickable.append($('<btn>').addClass('btn').click(deleteChannel)
+            .append($('<i>').addClass('fa fa-trash')));
+    
+    return $('<div>').addClass('channel_row').attr('name', channel_name)
+        .append($clickable);
 }
+
+function selectChannel(event) {
+    let channel_name = $(event.target).text();
+    socket.emit('join_channel', channel_name);
+}
+
+function leaveChannel(event) {
+    let channel_name = $(event.target).text();
+    socket.emit('leave_channel', channel_name);
+}
+
+function deleteChannel(event) {
+    let channel_name = $(event.target).text();
+    socket.emit('delete_channel', channel_name);
+}
+
+
+/*************************************/
+
+$('.channel_form').submit((e) => {
+
+    let $channel = $('#channel_input');
+    socket.emit('add_channel', $channel.val());
+
+    $channel.val('');
+    e.preventDefault();
+});
+
+$('.message_form').submit((e) => {
+
+    let $msg = $('#message_input');
+    let message = {
+        text: $msg.val(),
+        channel: socket.currentChannel
+    };
+
+    // Automatically send an 'message' event
+    socket.send(message);
+
+    $msg.val('');
+    e.preventDefault();
+});

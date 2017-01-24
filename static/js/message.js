@@ -34,13 +34,13 @@ function Message(from, text, date, color) {
 
     this.buildFullMessage = () => {
 
+        //TODO @See JQuery templates ?
         let $msg_group = $('<div>').addClass('msg_group')
             .append($('<span>').addClass('msg_sender').text(this.from))
             .append($('<span>').addClass('msg_time').text(getTimeOnly(this.date)))
             .append($('<p>').text(this.text));
 
         return $('<div>').addClass('msg_row')
-            //TODO Add custom color
             .append($('<div>').addClass('avatar').css('background-color', color)
                 .append($('<div>').addClass('avatar_name').text(this.from.charAt(0))))
             .append($msg_group);
