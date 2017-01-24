@@ -155,8 +155,11 @@ body {
     width: 100%;
 }
 
-.clickable {
+.clickable{
     cursor: pointer;
+}
+
+.hoverable {
     -webkit-transition: background-color ease 150ms;
     -moz-transition: background-color ease 150ms;
     -ms-transition: background-color ease 150ms;
@@ -165,7 +168,7 @@ body {
     padding: 5px 15px 5px 15px;
 }
 
-.clickable:hover {
+.hoverable:hover {
     background-color: #282b30;
 }
 

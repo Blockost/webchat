@@ -38,7 +38,7 @@ socket.on('members_update', (members) => {
 
     $members_list.empty();
     members.forEach((member) => {
-        $members_list.append(buildUserRow(member.name, member.color).addClass('clickable'));
+        $members_list.append(buildUserRow(member.name, member.color).addClass('hoverable'));
     });
 });
 
@@ -72,6 +72,7 @@ socket.on('channel_joined', (channel) => {
         message = new Message(message.from, message.text, message.date, message.color);
         buildAndAppendMessage(message, last_message, $msg_container);
     });
+    scrollToBottom($msg_container);
 });
 
 socket.on('channel_left', (channel) => {
@@ -82,7 +83,7 @@ socket.on('channel_left', (channel) => {
 
 socket.on('channel_deleted', (channel) => {
     socket.rooms.splice(channel.name, 1);
-    $channels_container.find('.clickable:contains("' + channel.name + '")')
+    $channels_container.find('.channel_row[name="' + channel.name + '"])')
         .remove();
 });
 
@@ -137,7 +138,7 @@ function buildUserRow(username, color) {
 
 function buildChannelRow(channel_name, channel_owner) {
 
-    let $clickable = $('<div>').addClass('clickable')
+    let $clickable = $('<div>').addClass('hoverable clickable')
         .text(channel_name).click(selectChannel);
 
     // If socket is in the channel
