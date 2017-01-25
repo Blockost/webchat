@@ -44,19 +44,20 @@ socket.on('members_update', (members) => {
 
 socket.on('message', (message) => {
 
-    console.log(message);
-
     if (message.channel === socket.currentChannel) {
+
+        let channel = getChannelSocketByName(socket.currentChannel);
+        last_message = channel.last_message;
         // Create a handful message object
         message = new Message(message.from, message.text, message.date, message.color);
         buildAndAppendMessage(message, last_message, $msg_container);
         // Scroll div to bottom
         scrollToBottom($msg_container);
         // Update last message received
-        last_message = message;
+        channel.last_message = message;
     } else {
         // Display a badge with the number of unread messages
-        let $channel_row = getChannelRowByName(socket.currentChannel);
+        let $channel_row = getChannelRowByName(message.channel);
 
         // If a badge is already appended, update its value
         // Create a now one, otherwise
@@ -67,8 +68,9 @@ socket.on('message', (message) => {
 });
 
 socket.on('channel_joined', (channel) => {
-    if (socket.rooms.indexOf(channel.name) == -1)
-        socket.rooms.push(channel.name);
+
+    if (!getChannelSocketByName(channel.name))
+        socket.rooms.push({name: channel.name});
 
     socket.currentChannel = channel.name;
 
@@ -79,21 +81,25 @@ socket.on('channel_joined', (channel) => {
     $channel_header_name.text(channel.name);
 
     $msg_container.empty();
-    channel.history.forEach((message) => {
+    last_message = undefined;
+
+    channel.history.forEach((message, index) => {
         message = new Message(message.from, message.text, message.date, message.color);
         buildAndAppendMessage(message, last_message, $msg_container);
+        let tmp_message = channel.history[index];
+        last_message = new Message(tmp_message.from, tmp_message.text, tmp_message.date, tmp_message.color);
     });
     scrollToBottom($msg_container);
 });
 
 socket.on('channel_left', (channel) => {
-    socket.rooms.splice(channel.name, 1);
+    socket.rooms.splice(getChannelSocketByName(channel.name), 1);
     getChannelRowByName(channel.name)
         .replaceWith(buildChannelRow(channel.name, channel.owner));
 });
 
 socket.on('channel_deleted', (channel) => {
-    socket.rooms.splice(channel.name, 1);
+    socket.rooms.splice(getChannelSocketByName(channel.name), 1);
     getChannelRowByName(channel.name).remove();
 });
 
@@ -102,7 +108,8 @@ socket.on('channel_deleted', (channel) => {
  * or a shortly detailed message (text only)
  * @param {Message} new_message
  * @param {Message} last_message
- * @Return {Object} a jquery object
+ * @param {JQuery} $message_container The DOM container of the returned message
+ * @Return {JQuery} The DOM 'message' element built
  */
 function buildAndAppendMessage(new_message, last_message, $message_container) {
 
@@ -112,7 +119,7 @@ function buildAndAppendMessage(new_message, last_message, $message_container) {
      * If same sender and time diff <= 30s,
      * append message to previous ones
      */
-    if (!(typeof last_message === 'undefined')
+    if (typeof last_message !== 'undefined'
         && new_message.hasSameSourceThan(last_message)
         && new_message.getTimeIntervalWith(last_message) <= 30000) {
 
@@ -153,19 +160,21 @@ function buildChannelRow(channel_name, channel_owner) {
 
     // If socket is in the channel
     // allows leaving it
-    if (socket.rooms.indexOf(channel_name) !== -1)
-        $channel_name.append($('<btn>').addClass('btn').click(leaveChannel)
-            .append($('<i>').addClass('fa fa-external-link')));
+    if (getChannelSocketByName(channel_name))
+        var $btn_leaver = $('<btn>').addClass('btn').click(leaveChannel)
+            .append($('<i>').addClass('fa fa-external-link'));
 
     // If socket is channel owner
     // allows deleting it
     if (channel_owner === socket.username)
-        $channel_name.append($('<btn>').addClass('btn').click(deleteChannel)
-            .append($('<i>').addClass('fa fa-trash')));
+        var $btn_delete = $('<btn>').addClass('btn').click(deleteChannel)
+            .append($('<i>').addClass('fa fa-trash'));
 
     return $('<div>').addClass('channel_row hoverable clickable')
         .attr('name', channel_name)
-        .append($channel_name);
+        .append($channel_name)
+        .append($btn_leaver)
+        .append($btn_delete);
 }
 
 
@@ -185,18 +194,33 @@ function getChannelRowByName(channel_name) {
         .find('.channel_row[name="' + channel_name + '"]');
 }
 
+function getChannelSocketByName(channel_name){
+    for(let i = 0; i < socket.rooms.length; i++){
+        let channel = socket.rooms[i];
+        if(channel.name == channel_name)
+            return channel;
+    }
+    return null;
+}
+
 function selectChannel(event) {
     let channel_name = $(event.target).text();
     socket.emit('join_channel', channel_name);
 }
 
 function leaveChannel(event) {
-    let channel_name = $(event.target).text();
+    let channel_name = $(event.currentTarget)
+        .parent()
+        .find('.channel_name').text();
+    
     socket.emit('leave_channel', channel_name);
 }
 
 function deleteChannel(event) {
-    let channel_name = $(event.target).text();
+    let channel_name = $(event.currentTarget)
+        .parent()
+        .find('.channel_name').text();
+
     socket.emit('delete_channel', channel_name);
 }
 

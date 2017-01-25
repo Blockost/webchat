@@ -68,8 +68,7 @@ io.on('connection', function (socket) {
 
     // Client sent a message
     socket.on('message', function (message) {
-
-        //TODO Add message to channel's history
+        
         // No broadcast of empty messages
         // or message sent to imaginary channel
         let channel = getChannelByName(message.channel);
@@ -114,7 +113,7 @@ io.on('connection', function (socket) {
         let channel = getChannelByName(channel_name);
         if (channel) {
             socket.leave(channel_name);
-            socket.emit('channel_left', getChannelByName(channel_name).toJSON());
+            socket.emit('channel_left', getChannelByName(channel_name).toShortJSON());
         }
     });
 

@@ -60,6 +60,7 @@ body {
     padding: 15px 0px 15px 0px;
 }
 
+/*TODO Improve design channel_row */
 .channel_row{
     width: 100%;
     display: flex;

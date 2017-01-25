@@ -14,12 +14,17 @@ function Channel(name, owner, history) {
         console.log(name, owner);
     };
     
-    this.toJSON = () => {
+    this.toShortJSON = () => {
         return {
             name: this.name,
             owner: this.owner,
-            history: this.history
         };
+    };
+    
+    this.toJSON = () => {
+        let JSON = this.toShortJSON();
+        JSON.history = this.history;
+        return JSON;
     }
 }
 
