@@ -8,6 +8,7 @@ socket.rooms = [];
 let $msg_container = $('.messages_container');
 let $channels_container = $('.channels_container');
 let $channel_header_name = $('.channel_header_name');
+let $msg_input = $('#message_input');
 let last_message;
 
 let username = window.prompt("Username: ", "Kévin");
@@ -20,6 +21,7 @@ socket.on('username_verified', (user) => {
 });
 
 socket.on('channels_update', (channels) => {
+    //TODO Do not rebuild all channel rows
     $channels_container.empty();
     channels.forEach((channel) => {
         $channels_container.append(buildChannelRow(channel.name, channel.owner))
@@ -90,17 +92,26 @@ socket.on('channel_joined', (channel) => {
         last_message = new Message(tmp_message.from, tmp_message.text, tmp_message.date, tmp_message.color);
     });
     scrollToBottom($msg_container);
+    $msg_input.focus();
 });
 
 socket.on('channel_left', (channel) => {
     socket.rooms.splice(getChannelSocketByName(channel.name), 1);
     getChannelRowByName(channel.name)
         .replaceWith(buildChannelRow(channel.name, channel.owner));
+
+    $msg_container.empty();
+    $channel_header_name.empty();
+    socket.currentChannel = '';
 });
 
 socket.on('channel_deleted', (channel) => {
     socket.rooms.splice(getChannelSocketByName(channel.name), 1);
     getChannelRowByName(channel.name).remove();
+
+    $msg_container.empty();
+    $channel_header_name.empty();
+    socket.currentChannel = '';
 });
 
 /**
@@ -238,15 +249,19 @@ $('.channel_form').submit((e) => {
 
 $('.message_form').submit((e) => {
 
-    let $msg = $('#message_input');
-    let message = {
-        text: $msg.val(),
-        channel: socket.currentChannel
-    };
+    if(socket.currentChannel !== ''){
+        let $msg = $('#message_input');
+        let message = {
+            text: $msg.val(),
+            channel: socket.currentChannel
+        };
 
-    // Automatically send an 'message' event
-    socket.send(message);
+        // Automatically send an 'message' event
+        socket.send(message);
 
-    $msg.val('');
+        $msg.val('');
+    }
+
+
     e.preventDefault();
 });
