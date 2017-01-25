@@ -7,7 +7,7 @@ socket.rooms = [];
 
 let $msg_container = $('.messages_container');
 let $channels_container = $('.channels_container');
-let $channel_name = $('.channel_name');
+let $channel_header_name = $('.channel_header_name');
 let last_message;
 
 let username = window.prompt("Username: ", "Kévin");
@@ -43,16 +43,27 @@ socket.on('members_update', (members) => {
 });
 
 socket.on('message', (message) => {
-    //TODO If user is 'inside' the channel whose the message comes from, add it, otherwise, display notification on the side of the channel name
-    //TODO socket.currentChannel
 
-    // Create a handful message object
-    message = new Message(message.from, message.text, message.date, message.color);
-    buildAndAppendMessage(message, last_message, $msg_container);
-    // Scroll div to bottom
-    scrollToBottom($msg_container);
-    // Update last message received
-    last_message = message;
+    console.log(message);
+
+    if (message.channel === socket.currentChannel) {
+        // Create a handful message object
+        message = new Message(message.from, message.text, message.date, message.color);
+        buildAndAppendMessage(message, last_message, $msg_container);
+        // Scroll div to bottom
+        scrollToBottom($msg_container);
+        // Update last message received
+        last_message = message;
+    } else {
+        // Display a badge with the number of unread messages
+        let $channel_row = getChannelRowByName(socket.currentChannel);
+
+        // If a badge is already appended, update its value
+        // Create a now one, otherwise
+        let badge = $channel_row.find('.badge');
+        badge.length > 0 ? badge.text(parseInt(badge.text()) + 1)
+            : $channel_row.append(buildBadge(1));
+    }
 });
 
 socket.on('channel_joined', (channel) => {
@@ -61,11 +72,11 @@ socket.on('channel_joined', (channel) => {
 
     socket.currentChannel = channel.name;
 
-    $channels_container.find('.channel_row[name="' + channel.name + '"]')
+    getChannelRowByName(channel.name)
         .replaceWith(buildChannelRow(channel.name, channel.owner));
 
     // Update chat header
-    $channel_name.text(channel.name);
+    $channel_header_name.text(channel.name);
 
     $msg_container.empty();
     channel.history.forEach((message) => {
@@ -77,14 +88,13 @@ socket.on('channel_joined', (channel) => {
 
 socket.on('channel_left', (channel) => {
     socket.rooms.splice(channel.name, 1);
-    $channels_container.find('.channel_row[name="' + channel.name + '"])')
+    getChannelRowByName(channel.name)
         .replaceWith(buildChannelRow(channel.name, channel.owner));
 });
 
 socket.on('channel_deleted', (channel) => {
     socket.rooms.splice(channel.name, 1);
-    $channels_container.find('.channel_row[name="' + channel.name + '"])')
-        .remove();
+    getChannelRowByName(channel.name).remove();
 });
 
 /**
@@ -126,7 +136,7 @@ function scrollToBottom($div) {
  * Construct a user row (avatar + username) as a Jquery object (DOM Tree)
  * @param username client's name
  * @param color client's custom color
- * @returns {Object} The created 'JQuery' DOM tree
+ * @returns {JQuery} The created 'JQuery' DOM tree
  */
 function buildUserRow(username, color) {
     return $('<div>').addClass('user_row')
@@ -138,23 +148,41 @@ function buildUserRow(username, color) {
 
 function buildChannelRow(channel_name, channel_owner) {
 
-    let $clickable = $('<div>').addClass('hoverable clickable')
+    let $channel_name = $('<div>').addClass('channel_name')
         .text(channel_name).click(selectChannel);
 
     // If socket is in the channel
     // allows leaving it
     if (socket.rooms.indexOf(channel_name) !== -1)
-        $clickable.append($('<btn>').addClass('btn').click(leaveChannel)
+        $channel_name.append($('<btn>').addClass('btn').click(leaveChannel)
             .append($('<i>').addClass('fa fa-external-link')));
 
     // If socket is channel owner
     // allows deleting it
     if (channel_owner === socket.username)
-        $clickable.append($('<btn>').addClass('btn').click(deleteChannel)
+        $channel_name.append($('<btn>').addClass('btn').click(deleteChannel)
             .append($('<i>').addClass('fa fa-trash')));
-    
-    return $('<div>').addClass('channel_row').attr('name', channel_name)
-        .append($clickable);
+
+    return $('<div>').addClass('channel_row hoverable clickable')
+        .attr('name', channel_name)
+        .append($channel_name);
+}
+
+
+/**
+ * Build a DOM element containing the number of unread messages in a channel
+ * @param message_numbers The number of unread message
+ * @returns {JQuery} The created 'JQuery' DOM element
+ */
+function buildBadge(message_numbers) {
+    return $('<div>').addClass('badge').text(message_numbers);
+
+}
+
+
+function getChannelRowByName(channel_name) {
+    return $channels_container
+        .find('.channel_row[name="' + channel_name + '"]');
 }
 
 function selectChannel(event) {

@@ -79,6 +79,7 @@ io.on('connection', function (socket) {
             message.text = message.text;
             message.date = new Date();
             message.color = socket.color;
+            message.channel = channel.name;
 
             // Add message to channel's history
             channel.history.push(message);

@@ -60,6 +60,15 @@ body {
     padding: 15px 0px 15px 0px;
 }
 
+.channel_row{
+    width: 100%;
+    display: flex;
+}
+
+.channel_header_name{
+    font-weight: bold;
+}
+
 .channel_creator {
     display: flex;
     flex: 0.1;
@@ -142,10 +151,6 @@ body {
     overflow-y: auto;
 }
 
-.channel_name{
-    font-weight: bold;
-}
-
 .members_online {
     padding: 10px;
 }
@@ -172,7 +177,20 @@ body {
     background-color: #282b30;
 }
 
-/* Message CSS */
+.badge {
+    min-width: 25px;
+    max-width: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 3px;
+    background-color: #f04747;
+    box-shadow: 0 1px 0 rgba(0,0,0,.25),inset 0 1px 0 hsla(0,0%,100%,.15);
+    color: #fff;
+    text-shadow: 0 1px 0 rgba(0,0,0,.25);
+}
+
+/* Message style */
 
 .msg_row {
     padding-top: 10px;
