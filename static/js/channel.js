@@ -3,7 +3,7 @@ function Channel(name, owner, history) {
     if(name.charAt(0) !== '#')
         name = '#' + name;
     
-    this.name = name;
+    this.name = name.substr(0, 11);
     this.owner = owner;
     
     // History contains all  the previous messages sent to this channel
