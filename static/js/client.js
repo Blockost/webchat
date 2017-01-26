@@ -11,9 +11,6 @@ let $channel_header_name = $('.channel_header_name');
 let $msg_input = $('#message_input');
 let last_message;
 
-let username = window.prompt("Username: ", "Kévin");
-socket.emit('username_set', username);
-
 socket.on('username_verified', (user) => {
     let channels_panel_header = $('.channels_panel_header');
     socket.username = user.name;

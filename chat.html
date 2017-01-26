@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Chat service</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro">
+    <link rel="stylesheet" type="text/css" href="/static/css/base.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/chat.css">
+    <link rel="stylesheet" href="/node_modules/font-awesome/css/font-awesome.min.css">
+</head>
+<body>
+
+<div id="channels">
+    <div class="channels_panel_header header">
+        <!-- Here will be user icon + username -->
+    </div>
+
+    <div class="channels_panel_content">
+        <div class="channels_container">
+            <!-- Here will be all the channels -->
+        </div>
+
+        <div class="channel_creator">
+            <form class="channel_form">
+
+                <input name="channel_input" id="channel_input" class="input" autocomplete="off"
+                       spellcheck="true" placeholder="Channel name (Ex: Flood, etc...)"/>
+
+            </form>
+        </div>
+    </div>
+</div>
+<div id="main_panel">
+    <div class="main_panel_header header">
+        <div>
+            <h3 class="channel_header_name"></h3>
+        </div>
+        <div>
+            <button class="btn btn_active" onclick="togglePanel(this)">
+                <i class="fa fa-users" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="main_panel_content">
+
+        <div class="chat_panel">
+            <div class="messages_container">
+                <!-- Here will be all the chat messages -->
+            </div>
+            <div class="message_bar">
+                <form class="message_form">
+
+                    <input name="message_input" id="message_input" class="input" autofocus
+                           autocomplete="off" spellcheck="true" placeholder="Say something interesting..."/>
+
+                </form>
+            </div>
+        </div>
+
+        <div class="channel_members">
+            <div class="members_online"></div>
+            <div class="members_list"></div>
+        </div>
+    </div>
+
+</div>
+
+
+<!-- JS libraries -->
+<script src="/node_modules/socket.io-client/dist/socket.io.min.js"></script>
+<script src="/node_modules/jquery/dist/jquery.min.js"></script>
+
+<!-- client behaviour -->
+<script src="/static/js/client.js"></script>
+<script src="/static/js/message.js"></script>
+<script src="/static/js/animations.js"></script>
+
+</body>
+</html>
