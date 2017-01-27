@@ -12,9 +12,9 @@ let $msg_input = $('#message_input');
 let last_message;
 
 socket.on('username_verified', (user) => {
-    let channels_panel_header = $('.channels_panel_header');
+    let profile_picture = $('.channels_panel_header>.user');
     socket.username = user.name;
-    channels_panel_header.append(buildUserRow(user.name, user.color));
+    profile_picture.append(buildUserRow(user.name, user.color));
 });
 
 socket.on('channels_update', (channels) => {

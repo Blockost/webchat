@@ -20,12 +20,43 @@
 .channels_panel_header {
     display: flex;
     flex-direction: row;
+}
+
+.channels_panel_header > .user{
+    display: flex;
+    flex-direction: row;
     flex-grow: 1;
     justify-content: center;
     align-items: flex-start;
     flex-flow: column wrap;
     word-break: break-all;
 }
+
+.disconnect{
+    display: flex;
+    flex-grow: 0.2;
+    flex-flow: column wrap;
+    justify-content: center;
+    align-items: center;
+    padding: 0px 5px;
+    cursor: pointer;
+    -webkit-transition: background-color ease 150ms;
+    -moz-transition: background-color ease 150ms;
+    -ms-transition: background-color ease 150ms;
+    -o-transition: background-color ease 150ms;
+    transition: background-color ease 150ms;
+}
+
+.disconnect:hover{
+    background-color: #cd201f;
+    color: #fff;
+}
+
+.disconnect > .btn{
+    width: 100%;
+}
+
+
 
 .channels_panel_content {
     flex-grow:1;
@@ -69,11 +100,11 @@
     justify-content: space-between;
     align-items: center;
     flex-grow: 1;
+    padding-right: 10px;
 }
 
 .header {
     padding-left: 15px;
-    padding-right: 15px;
     min-height: 50px;
     max-height: 50px;
     color: rgba(255, 255, 255, .6);
@@ -223,6 +254,7 @@
 }
 
 .btn {
+    text-decoration: none;
     color: #555;
     background-color: transparent;
     border: 0;
