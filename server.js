@@ -78,6 +78,7 @@ app.post('/login', (req, res) => {
     // If username doesn't exist, then store username/password
     //TODO Ok, existing user auth
     // TODO No, existing user NOT AUTH
+    //TODO Reject user named root
 
     if (username === 'lala' && password === 'lala') {
         req.session.user = username;
@@ -101,7 +102,7 @@ app.get('/logout', (req, res) => {
  * @param next The next delegate routing handler
  */
 function requireAuth(req, res, next) {
-    if (!req.session || !req.session.user){
+    if (!req.session || !req.session.user) {
         return res.redirect('/');
     }
     // If session cookie exists, continue...
@@ -118,7 +119,7 @@ function getSecuredUser(username) {
  * On client's connection, do something...
  */
 io.on('connection', function (socket) {
-    
+
     socket.username = socket.request.session.user;
     socket.color = utils.getRandomColor();
 
@@ -192,18 +193,20 @@ io.on('connection', function (socket) {
 
     socket.on('delete_channel', (channel_name) => {
         let channel = getChannelByName(channel_name);
-        if (channel) {
-            /*if (channel.owner === socket.username) {
-                io.in(channel_name).emit('channel_deleted', channel_name);
-                /!*io.sockets.in(channel_name).leave(channel_name);*!/
+        if (channel && channel.owner === socket.username) {
 
-                io.sockets.clients(channel_name).forEach((socket) => {
-                    socket.leave(channel_name);
-                });
+            let chan = channel.toShortJSON();
+            chan.deleted = true;
 
-                channels_pool.splice(getChannelByName(channel_name), 1);
-            }*/
+
+            // Send a confirmation to each sockets in this channel
+            // Every socket will leave the channel
+            io.emit('channel_deleted', channel_name);
+            io.in(channel_name).emit('channel_left', chan);
+
+            channels_pool.splice(channels_pool.indexOf(channel), 1);
         }
+
     });
 
     // Client has disconnected
@@ -225,6 +228,10 @@ function sendMembersUpdate() {
 }
 
 
+/**
+ * 
+ * @param socket
+ */
 function sendChannelsUpdate(socket) {
     let sender = socket || io;
 
@@ -240,8 +247,8 @@ function sendChannelsUpdate(socket) {
 
 /**
  * Retrieve a channel according to its name
- * @param {string} name
- * @returns {Channel}
+ * @param {string} name The channel's name
+ * @returns {Channel|null} The Channel if found, null otherwise
  */
 function getChannelByName(name) {
     for (let channel of channels_pool) {

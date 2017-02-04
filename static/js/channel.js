@@ -9,10 +9,6 @@ function Channel(name, owner, history) {
     // History contains all  the previous messages sent to this channel
     // Simple structure message {from, text, date}
     this.history = history || [];
-
-    this.toString = () => {
-        console.log(name, owner);
-    };
     
     this.toShortJSON = () => {
         return {

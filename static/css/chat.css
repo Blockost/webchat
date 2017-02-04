@@ -76,6 +76,14 @@
 .channel_row{
     width: 100%;
     display: flex;
+    flex-flex: row wrap;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.channel_misc{
+    display: flex;
+    flex-direction: row;
 }
 
 .channel_header_name{
@@ -267,6 +275,22 @@
 
 .btn_active {
     color: white;
+}
+
+.btn_leave{
+    margin-right: 5px;
+}
+
+.btn_leave:hover{
+    color: #06EF80;
+}
+
+.btn_delete{
+    margin-right: 5px;
+}
+
+.btn_delete:hover{
+    color: #cd201f;
 }
 
 .user_row {
