@@ -41,7 +41,7 @@ function Message(from, text, date, color) {
             .append($('<p>').text(this.text));
 
         return $('<div>').addClass('msg_row')
-            .append($('<div>').addClass('avatar').css('background-color', color)
+            .append($('<div>').addClass('avatar ' + color)
                 .append($('<div>').addClass('avatar_name').text(this.from.charAt(0))))
             .append($msg_group);
     };

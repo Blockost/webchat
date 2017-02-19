@@ -169,7 +169,7 @@ function scrollToBottom($div) {
  */
 function buildUserRow(username, color) {
     return $('<div>').addClass('user_row')
-        .append($('<div>').addClass('avatar').css('background-color', color)
+        .append($('<div>').addClass('avatar ' + color)
             .append($('<div>').addClass('avatar_name').text(username.charAt(0))))
         .append($('<div>').addClass('user_name').text(username));
 }

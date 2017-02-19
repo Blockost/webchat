@@ -72,7 +72,6 @@
     padding: 15px 0px 15px 0px;
 }
 
-/*TODO Improve design channel_row */
 .channel_row{
     width: 100%;
     display: flex;
@@ -239,6 +238,34 @@
 .avatar_name {
     flex: 0.001;
 
+}
+
+.avatar_color1{
+    background-color: #E8EAF6;
+}
+
+.avatar_color2{
+    background-color: #FBE9E7;
+}
+
+.avatar_color3{
+    background-color: #E0F2F1;
+}
+
+.avatar_color4{
+    background-color: #F3E5F5;
+}
+
+.avatar_color5{
+    background-color: #EEEEEE;
+}
+
+.avatar_color6{
+    background-color: #FFEBEE;
+}
+
+.avatar_color7{
+    background-color: #E3F2FD;
 }
 
 .msg_group {

@@ -1,17 +1,17 @@
 'use strict';
 
-let colors = [
-    '#E8EAF6',
-    '#FBE9E7',
-    '#E0F2F1',
-    '#F3E5F5',
-    '#EEEEEE',
-    '#FFEBEE',
-    '#E3F2FD'
+let avatar_colors = [
+    'avatar_color1',
+    'avatar_color2',
+    'avatar_color3',
+    'avatar_color4',
+    'avatar_color5',
+    'avatar_color6',
+    'avatar_color7'
 ];
 
 function getRandomColor() {
-    return colors[Math.floor(Math.random() * (colors.length - 1))];
+    return avatar_colors[Math.floor(Math.random() * (avatar_colors.length - 1))];
 }
 
 module.exports.getRandomColor = getRandomColor;
