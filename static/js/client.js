@@ -185,19 +185,19 @@ function buildChannelRow(channel_name, channel_owner) {
     // If socket is in the channel
     // allows leaving it
     if (getChannelSocketByName(channel_name))
-        var $btn_leave = $('<btn>').addClass('btn btn_leave').click(leaveChannel)
+        var $btn_leave = $('<button>').addClass('btn btn_leave').click(leaveChannel)
             .append($('<i>').addClass('fa fa-external-link'));
 
     // If socket is channel owner
     // allows deleting it
     if (channel_owner === socket.username)
-        var $btn_delete = $('<btn>').addClass('btn btn_delete').click(deleteChannel)
+        var $btn_delete = $('<button>').addClass('btn btn_delete').click(deleteChannel)
             .append($('<i>').addClass('fa fa-trash'));
 
     $channel_misc.append($btn_leave).append($btn_delete);
 
     return $('<div>').addClass('channel_row hoverable clickable')
-        .attr('name', channel_name)
+        .attr('id', channel_name)
         .append($channel_name)
         .append($channel_misc)
         .click(selectChannel);
@@ -217,7 +217,7 @@ function buildBadge(message_numbers) {
 
 function getChannelRowByName(channel_name) {
     return $channels_container
-        .find('.channel_row[name="' + channel_name + '"]');
+        .find('.channel_row[id="' + channel_name + '"]');
 }
 
 function getChannelSocketByName(channel_name){

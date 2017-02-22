@@ -75,7 +75,7 @@
 .channel_row{
     width: 100%;
     display: flex;
-    flex-flex: row wrap;
+    flex-flow: row wrap;
     justify-content: space-between;
     align-items: center;
 }
@@ -200,6 +200,7 @@
 .badge {
     min-width: 25px;
     max-width: 25px;
+    margin-right: 5px;
     display: flex;
     justify-content: center;
     align-items: center;

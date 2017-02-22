@@ -164,6 +164,7 @@ io.on('connection', function (socket) {
 
     // Client wants to create a new channel
     socket.on('add_channel', (channel_name) => {
+        //TODO add only if channel name is unique
         channel_name = channel_name.trim();
         if (channel_name !== '') {
             let channel = new Channel(channel_name, socket.username);

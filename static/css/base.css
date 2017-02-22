@@ -1,3 +1,10 @@
+@font-face {
+    font-family: 'Source Sans Pro';
+    src: url('/static/fonts/SourceSansPro-Regular.ttf');
+}
+
+/************************************/
+
 * {
     margin: 0;
     padding: 0;
