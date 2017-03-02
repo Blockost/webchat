@@ -19,9 +19,9 @@ let sessions = require('express-session');
 /*********************/
 /**** Custom libs ****/
 /*********************/
+let db = require('./db');
 let utils = require('./static/js/utils');
 let Channel = require('./static/js/channel');
-
 
 /*********************/
 /**** Variables ****/
@@ -33,9 +33,12 @@ let channels_pool = [new Channel('#general', 'root')];
 /******************/
 /*** APP CONFIG ***/
 /******************/
+
 // routing
 app.use('/static', express.static(__dirname + '/static'));
 app.use('/node_modules', express.static(__dirname + '/node_modules'));
+
+
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({extended: false}));
@@ -48,7 +51,10 @@ let sessionMiddleware = sessions({
     saveUninitialized: false, // Don't save unmodified cookies
 });
 
-// sessions/cookies config
+
+/**
+ * sessions/cookies config
+ */
 app.use(sessionMiddleware);
 // Sharing session between express and socket.io
 io.use((socket, next) => {
@@ -57,61 +63,25 @@ io.use((socket, next) => {
 
 
 /**
- * Serve index page to browser
+ * Initiate db connection
  */
-
-app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/index.html');
+let mongodb_url = 'mongodb://localhost:27017/F21NA_se22_chat';
+db.connect(mongodb_url, (err) => {
+    if (err) throw err;
+    console.log('-- Connected to ' + mongodb_url);
 });
 
-app.get('/chat', requireAuth, (req, res) => {
-    res.sendFile(__dirname + '/chat.html');
-});
+// Controllers middleware
+app.use(require('./controllers/baseController'));
 
 
-app.post('/login', (req, res) => {
-
-    let username = req.body.username;
-    let password = req.body.password;
-
-    // If username exists, then the password must match the username
-    // If username doesn't exist, then store username/password
-    //TODO Ok, existing user auth
-    // TODO No, existing user NOT AUTH
-    //TODO Reject user named root
-
-    if (username === 'lala' && password === 'lala') {
-        req.session.user = username;
-        return res.send({redirectTo: '/chat'});
+function isUserConnected(username) {
+    for (let socket in clients_pool) {
+        if (socket.username === username)
+            return true;
     }
 
-    return res.send('NO AUTH');
-});
-
-
-app.get('/logout', (req, res) => {
-    req.session.destroy();
-    res.redirect('/');
-});
-
-
-/**
- * Check if user is authenticated
- * @param req The request user sends
- * @param res The responds we'll send to the user
- * @param next The next delegate routing handler
- */
-function requireAuth(req, res, next) {
-    if (!req.session || !req.session.user) {
-        return res.redirect('/');
-    }
-    // If session cookie exists, continue...
-    next();
-}
-
-function getSecuredUser(username) {
-    //TODO check in a DS if username exists
-    return null;
+    return false;
 }
 
 
@@ -230,7 +200,7 @@ function sendMembersUpdate() {
 
 
 /**
- * 
+ *
  * @param socket
  */
 function sendChannelsUpdate(socket) {
@@ -262,7 +232,7 @@ function getChannelByName(name) {
 /********************/
 /*** START SERVER ***/
 /********************/
-http.listen(3000, function () {
+http.listen(3000, () => {
     console.log('Server running on *:3000');
 });
 
