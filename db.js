@@ -2,11 +2,11 @@ let MongoClient = require('mongodb').MongoClient;
 let db;
 
 
-exports.connect = (url, done) => {
+exports.connect = (url, callback) => {
     MongoClient.connect(url, (err, db) => {
-        if(err) done(err);
+        if(err) callback(err);
         this.db = db;
-        done();
+        callback();
     });
 };
 
@@ -14,12 +14,12 @@ exports.get = () => {
     return this.db;
 };
 
-exports.close = (done) => {
+exports.close = (callback) => {
     if(this.db){
         this.db.close((err, res) => {
-            if(err) done(err);
+            if(err) callback(err);
             this.db = null;
-            done(null, res);
+            callback(null, res);
         });
     }
 };

@@ -11,36 +11,27 @@ router.post('/login', (req, res) => {
     let username = req.body.username;
     let password = req.body.password;
 
-    db.get().collection('users')
-        .findOne({username: username}, (err, user) => {
+    getUser(username, (err, user) => {
 
-            if (err) throw err;
+        if (err) throw err;
 
-            // User found: user must not be already authenticated
-            // AND passwords must match
-            if (user) {
-
-                if (/*!isUserConnected(username) && */user.password === password) {
-                    req.session.user = username;
-                    return res.send({redirectTo: '/chat'});
-                }
-                return res.send();
-            }
-
-            // User not found: let's create it!
-            db.get().collection('users').insertOne({
-                username: username,
-                password: password
-            }, (err) => {
-
-                if (err) throw err;
+        // User found: user must not be already authenticated
+        // AND passwords must match
+        if (user) {
+            if (/*!isUserConnected(username) && */user.password === password) {
                 req.session.user = username;
                 return res.send({redirectTo: '/chat'});
-                
-            });
+            }
+            return res.send();
+        }
 
-
+        // User not found: let's create it!
+        insertUser(username, password, (err) => {
+            if (err) throw err;
+            req.session.user = username;
+            return res.send({redirectTo: '/chat'});
         });
+    });
 });
 
 
@@ -71,5 +62,27 @@ function requireAuth(req, res, next) {
     // If session cookie exists, continue...
     next();
 }
+/**
+ *
+ * @param username
+ * @param callback
+ */
+var getUser = (username, callback) => {
+    db.get().collection('users')
+        .findOne({username: username}, (err, user) => {
+            if (err) return callback(err);
+            return callback(null, user);
+        });
+};
+
+var insertUser = (username, password, callback) => {
+    db.get().collection('users').insertOne({
+        username: username,
+        password: password
+    }, (err, user) => {
+        if (err) return callback(err);
+        return callback(null, user);
+    });
+};
 
 module.exports = router;
