@@ -32,10 +32,10 @@ body {
     flex-flow: column wrap;
     justify-content: center ;
     align-items: center;
+    color: white;
 }
 
 .help{
-    color: white;
     display: flex;
     flex-flow: column wrap;
     justify-content: center;
@@ -75,4 +75,10 @@ body {
 
 .submit:hover{
     background-color: #00c300;
+}
+
+.warn_cookie {
+    font-size: 12px;
+    text-align: center;
+    margin-top: 1%;
 }
