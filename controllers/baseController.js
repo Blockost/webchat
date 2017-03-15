@@ -3,7 +3,7 @@ let db = require('../db');
 
 // Login page
 router.get('/', (req, res) => {
-    res.sendFile('index.html', {root: './'});
+    res.sendFile('index.xhtml', {root: './static/html/'});
 });
 
 router.post('/login', (req, res) => {
@@ -37,11 +37,11 @@ router.post('/login', (req, res) => {
 
 // Chat page
 router.get('/chat', requireAuth, (req, res) => {
-    res.sendFile('/chat.html', {root: './'});
+    res.sendFile('/chat.xhtml', {root: './static/html/'});
 });
 
 router.get('/about', (req, res) => {
-    res.sendFile('/about.html', {root: './'});
+    res.sendFile('/about.xhtml', {root: './static/html/'});
 });
 
 router.get('/logout', (req, res) => {

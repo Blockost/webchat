@@ -22,7 +22,7 @@
     flex-direction: row;
 }
 
-.channels_panel_header > .user{
+.channels_panel_header > .user {
     display: flex;
     flex-direction: row;
     flex-grow: 1;
@@ -32,7 +32,7 @@
     word-break: break-all;
 }
 
-.disconnect{
+.disconnect {
     display: flex;
     flex-grow: 0.2;
     flex-flow: column wrap;
@@ -47,19 +47,17 @@
     transition: background-color ease 150ms;
 }
 
-.disconnect:hover{
+.disconnect:hover {
     background-color: #cd201f;
     color: #fff;
 }
 
-.disconnect > .btn{
+.disconnect > .btn {
     width: 100%;
 }
 
-
-
 .channels_panel_content {
-    flex-grow:1;
+    flex-grow: 1;
     display: flex;
     flex-direction: column;
     align-content: space-between;
@@ -72,7 +70,7 @@
     padding: 15px 0px 15px 0px;
 }
 
-.channel_row{
+.channel_row {
     width: 100%;
     display: flex;
     flex-flow: row wrap;
@@ -80,12 +78,12 @@
     align-items: center;
 }
 
-.channel_misc{
+.channel_misc {
     display: flex;
     flex-direction: row;
 }
 
-.channel_header_name{
+.channel_header_name {
     font-weight: bold;
 }
 
@@ -180,7 +178,7 @@
     width: 100%;
 }
 
-.clickable{
+.clickable {
     cursor: pointer;
 }
 
@@ -206,9 +204,9 @@
     align-items: center;
     border-radius: 3px;
     background-color: #f04747;
-    box-shadow: 0 1px 0 rgba(0,0,0,.25),inset 0 1px 0 hsla(0,0%,100%,.15);
+    box-shadow: 0 1px 0 rgba(0, 0, 0, .25), inset 0 1px 0 hsla(0, 0%, 100%, .15);
     color: #fff;
-    text-shadow: 0 1px 0 rgba(0,0,0,.25);
+    text-shadow: 0 1px 0 rgba(0, 0, 0, .25);
 }
 
 /* Message style */
@@ -241,31 +239,31 @@
 
 }
 
-.avatar_color1{
+.avatar_color1 {
     background-color: #E8EAF6;
 }
 
-.avatar_color2{
+.avatar_color2 {
     background-color: #FBE9E7;
 }
 
-.avatar_color3{
+.avatar_color3 {
     background-color: #E0F2F1;
 }
 
-.avatar_color4{
+.avatar_color4 {
     background-color: #F3E5F5;
 }
 
-.avatar_color5{
+.avatar_color5 {
     background-color: #EEEEEE;
 }
 
-.avatar_color6{
+.avatar_color6 {
     background-color: #FFEBEE;
 }
 
-.avatar_color7{
+.avatar_color7 {
     background-color: #E3F2FD;
 }
 
@@ -297,7 +295,7 @@
     cursor: pointer;
 }
 
-.btn:hover{
+.btn:hover {
     color: white;
 }
 
@@ -305,19 +303,19 @@
     color: white;
 }
 
-.btn_leave{
+.btn_leave {
     margin-right: 5px;
 }
 
-.btn_leave:hover{
+.btn_leave:hover {
     color: #06EF80;
 }
 
-.btn_delete{
+.btn_delete {
     margin-right: 5px;
 }
 
-.btn_delete:hover{
+.btn_delete:hover {
     color: #cd201f;
 }
 
@@ -341,6 +339,20 @@
 #message_input:focus {
     border-color: lime;
     box-shadow: 0 0 10px 0.5px lime, 0 0 10px 1px lime inset;
+    opacity: 1;
+}
+
+#channel_input {
+    -webkit-transition: all ease .5s;
+    -moz-transition: all ease .5s;
+    -ms-transition: all ease .5s;
+    -o-transition: all ease .5s;
+    transition: all ease .5s;
+}
+
+#channel_input:focus {
+    border-color: #0084ff;
+    box-shadow: 0 0 10px 0.5px #0084ff, 0 0 10px 1px #0084ff inset;
     opacity: 1;
 }
 
