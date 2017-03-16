@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Chat service</title>
+    <link rel="stylesheet" type="text/css" href="css/base.css"></link>
+</head>
+<body>
+
+<div class="container">
+    <div class="help">
+        <p>Enter your credentials in the from below.</p>
+        <p>If you don't have an account, it will be automatically created.</p>
+    </div>
+    <div class="login">
+        <form>
+            <input type="text" name="input_username" id="input_username" class="login_input" autocomplete="off" autofocus="autofocus" spellcheck="true" placeholder="Username (will be your display name)"/>
+
+            <input type="password" name="input_password" id="input_password" class="login_input" autocomplete="off" spellcheck="true" placeholder="Password"/>
+
+            <button class="submit">Sign in / Sign up</button>
+        </form>
+    </div>
+
+    <button onclick="window.location.href='http://validator.w3.org/check?uri=' +window.location.href"> Valid HTML? </button>
+    <button onclick="window.location.href='https://jigsaw.w3.org/css-validator/validator?uri=' +window.location.href"> Valid CSS? </button>
+</div>
+
+<!-- JS libraries -->
+<script src="jquery/dist/jquery.min.js"></script>
+
+<!-- Custom JS files -->
+<script src="js/index.js"></script>
+
+
+</body>
+</html>

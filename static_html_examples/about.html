@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chat service</title>
+    <link rel="stylesheet" type="text/css" href="css/base.css">
+</head>
+<body>
+
+<div class="container">
+    <div class="help">
+        <p> Group members: Simon ESPIGOLE, Teddy GILBERY and Hugo LEGRAND </p>
+        <p>Purpose: This website has been designed for the F21NA course at HWU. Its goal is to offer a
+            chat service for discussion on general topics.
+        </p>
+        <br>
+
+        <p>Links: </p>
+        <ul>
+            <li><a href="index.html">Index page.</a>
+                This page allows a user to authenticate itself to the chat service
+            </li>
+            <li><a href="chat.html">'Main' page of the application.</a>
+                Uses a Single-Page design.
+            </li>
+            <li><a href="css/base.css">base.css</a>
+                base css stylesheet
+            </li>
+            <li><a href="css/chat.css">chat.css</a>
+                chat css stylesheet
+            </li>
+            <li><a href="js/index.js">index.js</a>
+                Javascript functions for index page
+            </li>
+            <li><a href="js/animations.js">animation.js</a>
+                Javascript functions to animate panels on chat page
+            </li>
+        </ul>
+        <br>
+        <p> On the chat page, one can send a message to a specific channel using the text area at the bottom.</p>
+        <p>Also, one may creates channels with the text area on the left panel.</p>
+        <p>Channels can be joined, left and deleted using specific buttons (joined by clicking on the channel, left by
+            clicking the green window and deleted by clicking the red trash)
+        </p>
+        <p> Red badges on the right side indicates the number of unread messages in that channel.</p>
+        <p>connected users are displayed on the right panel</p>
+        <p>Finally, one can disconnect for the chat using the 'open-window' button on the top-left panel.</p>
+        <br>
+        <p>Because this application contains only two pages, everybody was working as a web designer on each page.</p>
+
+        <br>
+        <br>
+        <p>External libraries: <a href="https://jquery.com/">jQuery</a> and <a href="http://fontawesome.io/">Font
+            Awesome</a></p>
+        <p>Using jQuery for such simple pages can be surprising but it will be largely used when we will add
+            interactions with the server (See Stage 2)</p>
+        <p>Also, CSS Stylesheets from Font Awesome raise a lots of error on CSS Validator. These errors are beyond our
+            will!</p>
+        <br>
+        <br>
+
+        <p>Our design takes advantage of CSS3 transitions and HTML5 attributes such as 'autofocus', 'spellcheck' or
+            'autocomplete' </p>
+    </div>
+
+
+    <button onclick="window.location.href='http://validator.w3.org/check?uri=' +window.location.href">Valid HTML?
+    </button>
+    <button onclick="window.location.href='https://jigsaw.w3.org/css-validator/validator?uri=' +window.location.href">
+        Valid CSS?
+    </button>
+</div>
+
+<!-- JS libraries -->
+<script src="jquery/dist/jquery.min.js"></script>
+
+<!-- Custom JS files -->
+<script src="js/index.js"></script>
+
+
+</body>
+</html>
