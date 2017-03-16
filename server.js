@@ -27,7 +27,7 @@ let Channel = require('./static/js/channel');
 /**** Variables ****/
 /*********************/
 let clients_pool = [];
-let channels_pool = [new Channel('#general', 'root')];
+let channels_pool = [new Channel('general', 'root')];
 
 
 /******************/
@@ -75,16 +75,6 @@ db.connect(mongodb_url, (err) => {
 app.use(require('./controllers/baseController'));
 
 
-function isUserConnected(username) {
-    for (let socket in clients_pool) {
-        if (socket.username === username)
-            return true;
-    }
-
-    return false;
-}
-
-
 /**
  * On client's connection, do something...
  */
@@ -103,11 +93,17 @@ io.on('connection', function (socket) {
 
     sendMembersUpdate();
 
-    // Automatically connect it to '#general' channel
-    socket.join(channels_pool[0].name);
-    socket.emit('channel_joined', channels_pool[0].toJSON());
+    // Automatically connect it to 'general' channel
+    let channel_general = channels_pool[0];
+    socket.join(channel_general.name);
+    socket.emit('channel_joined', channel_general.toJSON());
 
-    sendChannelsUpdate(socket);
+    socket.emit('channels_update');
+
+    // Send to socket all the channels available
+    for(let c of channels_pool){
+        socket.emit('channel_added', c.toShortJSON());
+    }
 
 
     // Client sent a message
@@ -134,12 +130,12 @@ io.on('connection', function (socket) {
 
     // Client wants to create a new channel
     socket.on('add_channel', (channel_name) => {
-        //TODO add only if channel name is unique
         channel_name = channel_name.trim();
-        if (channel_name !== '') {
+        if(channel_name !== '' && !getChannelByName(channel_name)){
             let channel = new Channel(channel_name, socket.username);
             channels_pool.push(channel);
-            sendChannelsUpdate();
+            // Broadcast to all sockets the new channel
+            io.emit('channel_added', channel.toShortJSON());
         }
     });
 
@@ -166,14 +162,14 @@ io.on('connection', function (socket) {
         let channel = getChannelByName(channel_name);
         if (channel && channel.owner === socket.username) {
 
-            let chan = channel.toShortJSON();
-            chan.deleted = true;
-
+            // Retrieve short JSON object
+            channel = channel.toShortJSON();
+            channel.deleted = true;
 
             // Send a confirmation to each sockets in this channel
             // Every socket will leave the channel
             io.emit('channel_deleted', channel_name);
-            io.in(channel_name).emit('channel_left', chan);
+            io.in(channel_name).emit('channel_left', channel);
 
             channels_pool.splice(channels_pool.indexOf(channel), 1);
         }
@@ -203,17 +199,21 @@ function sendMembersUpdate() {
  *
  * @param socket
  */
-function sendChannelsUpdate(socket) {
-    let sender = socket || io;
+function sendChannelsUpdate(channel) {
 
     /**
      * if a socket has been passed,
      * send update to it.
      * Broadcast otherwise
      */
-    sender.emit('channels_update', channels_pool.map((channel) => {
-        return channel.toJSON();
-    }));
+    
+    if(channel){
+        io.emit('channels_update', channel.toJSON()); 
+    } else {
+        socket.emit('channels_update', channels_pool.map((channel) => {
+            return channel.toJSON();
+        }));
+    }    
 }
 
 /**

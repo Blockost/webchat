@@ -1,8 +1,6 @@
 function Channel(name, owner, history) {
-
-    if(name.charAt(0) !== '#')
-        name = '#' + name;
     
+    // 10 chars max for channel name
     this.name = name.substr(0, 11);
     this.owner = owner;
     

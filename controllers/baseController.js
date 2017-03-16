@@ -18,7 +18,7 @@ router.post('/login', (req, res) => {
         // User found: user must not be already authenticated
         // AND passwords must match
         if (user) {
-            if (/*!isUserConnected(username) && */user.password === password) {
+            if (user.password === password) {
                 req.session.user = username;
                 return res.send({redirectTo: '/chat'});
             }
@@ -35,7 +35,7 @@ router.post('/login', (req, res) => {
 });
 
 
-// Chat page
+// Chat page - Need to be authenticated to access it
 router.get('/chat', requireAuth, (req, res) => {
     res.sendFile('/chat.xhtml', {root: './static/html/'});
 });

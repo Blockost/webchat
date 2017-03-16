@@ -33,8 +33,7 @@ function Message(from, text, date, color) {
     };
 
     this.buildFullMessage = () => {
-
-        //TODO @See JQuery templates ?
+        
         let $msg_group = $('<div>').addClass('msg_group')
             .append($('<span>').addClass('msg_sender').text(this.from))
             .append($('<span>').addClass('msg_time').text(getTimeOnly(this.date)))

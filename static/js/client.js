@@ -1,3 +1,7 @@
+/**
+ * Authors: Simon ESPIGOLÉ, Teddy Gilbert, Hugo LEGRAND
+ */
+
 let socket = io();
 socket.rooms = [];
 
@@ -15,14 +19,6 @@ socket.on('username_verified', (user) => {
     let profile_picture = $('.channels_panel_header>.user');
     socket.username = user.name;
     profile_picture.append(buildUserRow(user.name, user.color));
-});
-
-socket.on('channels_update', (channels) => {
-    //TODO Do not rebuild all channel rows
-    $channels_container.empty();
-    channels.forEach((channel) => {
-        $channels_container.append(buildChannelRow(channel.name, channel.owner))
-    });
 });
 
 
@@ -68,6 +64,7 @@ socket.on('message', (message) => {
     }
 });
 
+
 /**
  * On channel joined
  */
@@ -82,7 +79,7 @@ socket.on('channel_joined', (channel) => {
         .replaceWith(buildChannelRow(channel.name, channel.owner));
 
     // Update chat header
-    $channel_header_name.text(channel.name);
+    $channel_header_name.text('#' + channel.name);
 
     $msg_container.empty();
     last_message = undefined;
@@ -103,15 +100,27 @@ socket.on('channel_joined', (channel) => {
 socket.on('channel_left', (channel) => {
     socket.rooms.splice(getChannelSocketByName(channel.name), 1);
 
-    // Check if the channel has been deleted
-    if(!channel.deleted) getChannelRowByName(channel.name)
-        .replaceWith(buildChannelRow(channel.name, channel.owner));
+    /**
+     * If this event doesn't come from a 'channel_deleted' event:
+     * update channel row. Otherwise, do nothing...
+     */
+    if (!channel.deleted)
+        getChannelRowByName(channel.name)
+            .replaceWith(buildChannelRow(channel.name, channel.owner));
 
-    if(channel.name === socket.currentChannel){
+    if (channel.name === socket.currentChannel) {
         $msg_container.empty();
         $channel_header_name.empty();
         socket.currentChannel = '';
     }
+});
+
+/**
+ * On channel successfully added
+ */
+socket.on('channel_added', (channel) => {
+    $channels_container
+        .append(buildChannelRow(channel.name, channel.owner))
 });
 
 
@@ -178,8 +187,8 @@ function buildUserRow(username, color) {
 function buildChannelRow(channel_name, channel_owner) {
 
     let $channel_name = $('<div>').addClass('channel_name')
-        .text(channel_name);
-    
+        .text('#' + channel_name);
+
     let $channel_misc = $('<div>').addClass('channel_misc');
 
     // If socket is in the channel
@@ -220,32 +229,32 @@ function getChannelRowByName(channel_name) {
         .find('.channel_row[id="' + channel_name + '"]');
 }
 
-function getChannelSocketByName(channel_name){
-    for(let i = 0; i < socket.rooms.length; i++){
+function getChannelSocketByName(channel_name) {
+    for (let i = 0; i < socket.rooms.length; i++) {
         let channel = socket.rooms[i];
-        if(channel.name == channel_name)
+        if (channel.name == channel_name)
             return channel;
     }
     return null;
 }
 
 function selectChannel(event) {
-    let channel_name = $(event.target).text();
+    let channel_name = $(event.target).attr('id');
     socket.emit('join_channel', channel_name);
 }
 
 function leaveChannel(event) {
-    let channel_name = $(event.currentTarget)
-        .parent().parent()
-        .find('.channel_name').text();
-    
+    let channel_name = $(event.target)
+        .closest('.channel_row')
+        .attr('id');
+
     socket.emit('leave_channel', channel_name);
 }
 
 function deleteChannel(event) {
-    let channel_name = $(event.currentTarget)
-        .parent().parent()
-        .find('.channel_name').text();
+    let channel_name = $(event.target)
+        .closest('.channel_row')
+        .attr('id');
 
     socket.emit('delete_channel', channel_name);
 }
@@ -264,7 +273,7 @@ $('.channel_form').submit((e) => {
 
 $('.message_form').submit((e) => {
 
-    if(socket.currentChannel !== ''){
+    if (socket.currentChannel !== '') {
         let $msg = $('#message_input');
         let message = {
             text: $msg.val(),
