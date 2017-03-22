@@ -1,3 +1,7 @@
+/**
+ * Authors: Simon ESPIGOLÉ, Teddy GILBERT, Hugo LEGRAND
+ */
+
 let $input_username = $('#input_username');
 let $input_password = $('#input_password');
 

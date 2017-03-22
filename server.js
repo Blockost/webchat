@@ -1,3 +1,7 @@
+/**
+ * Authors: Simon ESPIGOLÉ, Teddy GILBERT, Hugo LEGRAND
+ */
+
 /*********************/
 /* Libs stack ***/
 

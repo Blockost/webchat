@@ -1,3 +1,7 @@
+/**
+ * Authors: Simon ESPIGOLÉ, Teddy GILBERT, Hugo LEGRAND
+ */
+
 function Channel(name, owner, history) {
     
     // 10 chars max for channel name

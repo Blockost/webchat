@@ -1,4 +1,8 @@
 /**
+ * Authors: Simon ESPIGOLÉ, Teddy GILBERT, Hugo LEGRAND
+ */
+
+/**
  * Practical class for messages manipulation
  * @param {String} from is the message's emitter
  * @param {String} text is what the emitter wants to say
