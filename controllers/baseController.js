@@ -1,8 +1,13 @@
 let router = require('express').Router();
+let crypto = require('crypto');
 let db = require('../db');
 
 // Login page
-router.get('/', (req, res) => {
+router.get('/', requireNotAuth, (req, res) => {
+    // User already logged in, redirect it to chat page
+    if (req.session && req.session.user)
+        return res.redirect('/chat');
+
     res.sendFile('index.xhtml', {root: './static/html/'});
 });
 
@@ -11,26 +16,37 @@ router.post('/login', (req, res) => {
     let username = req.body.username;
     let password = req.body.password;
 
-    getUser(username, (err, user) => {
+    db.getUser(username, (err, user) => {
 
         if (err) throw err;
 
         // User found: user must not be already authenticated
         // AND passwords must match
         if (user) {
-            if (user.password === password) {
+            const hash = crypto.createHash('sha256');
+            const hashed_pwd = hash.update(password).digest('base64');
+            if (hashed_pwd === user.password) {
                 req.session.user = username;
-                return res.send({redirectTo: '/chat'});
+                return res.send({
+                    message: 'User authenticated',
+                    redirectTo: '/chat'
+                });
             }
-            return res.send();
+            return res.send({message: 'Passwords mismatch'});
         }
 
         // User not found: let's create it!
-        insertUser(username, password, (err) => {
+        const hash = crypto.createHash('sha256');
+        const hashed_pwd = hash.update(password).digest('base64');
+        db.insertUser(username, hashed_pwd, (err) => {
             if (err) throw err;
             req.session.user = username;
-            return res.send({redirectTo: '/chat'});
+            return res.send({
+                message: 'User created',
+                redirectTo: '/chat'
+            });
         });
+
     });
 });
 
@@ -50,6 +66,19 @@ router.get('/logout', (req, res) => {
 });
 
 /**
+ * Check if user
+ * @param req The request user sends
+ * @param res The responds we'll send to the user
+ * @param next The next delegate routing handler
+ */
+function requireNotAuth(req, res, next) {
+    if (req.session && req.session.user) {
+        return res.redirect('/chat');
+    }
+    next();
+}
+
+/**
  * Check if user is authenticated
  * @param req The request user sends
  * @param res The responds we'll send to the user
@@ -62,27 +91,5 @@ function requireAuth(req, res, next) {
     // If session cookie exists, continue...
     next();
 }
-/**
- *
- * @param username
- * @param callback
- */
-var getUser = (username, callback) => {
-    db.get().collection('users')
-        .findOne({username: username}, (err, user) => {
-            if (err) return callback(err);
-            return callback(null, user);
-        });
-};
-
-var insertUser = (username, password, callback) => {
-    db.get().collection('users').insertOne({
-        username: username,
-        password: password
-    }, (err, user) => {
-        if (err) return callback(err);
-        return callback(null, user);
-    });
-};
 
 module.exports = router;
