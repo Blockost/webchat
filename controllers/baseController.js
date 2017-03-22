@@ -9,8 +9,13 @@ router.get('/', requireNoAuth, (req, res) => {
 
 router.post('/login', (req, res) => {
 
-    let username = req.body.username;
-    let password = req.body.password;
+
+    let username = req.body.username || '';
+    let password = req.body.password || '';
+
+    if(username.length < 4 || password < 4){
+        return res.send({message: 'Username or password too short'});
+    }
 
     db.getUser(username, (err, user) => {
 
