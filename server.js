@@ -78,7 +78,7 @@ app.use(require('./controllers/baseController'));
 /**
  * On client's connection, do something...
  */
-io.on('connection', function (socket) {
+io.on('connection', (socket) => {
 
     socket.username = socket.request.session.user;
     socket.color = utils.getRandomColor();
@@ -136,6 +136,7 @@ io.on('connection', function (socket) {
             channels_pool.push(channel);
             // Broadcast to all sockets the new channel
             io.emit('channel_added', channel.toShortJSON());
+            console.log(JSON.stringify(channels_pool));
         }
     });
 
@@ -162,16 +163,16 @@ io.on('connection', function (socket) {
         let channel = getChannelByName(channel_name);
         if (channel && channel.owner === socket.username) {
 
-            // Retrieve short JSON object
-            channel = channel.toShortJSON();
-            channel.deleted = true;
+            channel.delete();
 
             // Send a confirmation to each sockets in this channel
             // Every socket will leave the channel
             io.emit('channel_deleted', channel_name);
-            io.in(channel_name).emit('channel_left', channel);
+            io.in(channel_name).emit('channel_left', channel.toJSON());
 
             channels_pool.splice(channels_pool.indexOf(channel), 1);
+            console.log("delete channel <" + channel_name + ">");
+            console.log(JSON.stringify(channels_pool));
         }
 
     });
@@ -194,28 +195,6 @@ function sendMembersUpdate() {
     }));
 }
 
-
-/**
- *
- * @param socket
- */
-function sendChannelsUpdate(channel) {
-
-    /**
-     * if a socket has been passed,
-     * send update to it.
-     * Broadcast otherwise
-     */
-    
-    if(channel){
-        io.emit('channels_update', channel.toJSON()); 
-    } else {
-        socket.emit('channels_update', channels_pool.map((channel) => {
-            return channel.toJSON();
-        }));
-    }    
-}
-
 /**
  * Retrieve a channel according to its name
  * @param {string} name The channel's name
@@ -230,7 +209,7 @@ function getChannelByName(name) {
 
 
 /********************/
-/*** START SERVER ***/
+/*** SERVER START ***/
 /********************/
 http.listen(3000, () => {
     console.log('Server running on *:3000');

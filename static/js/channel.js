@@ -8,10 +8,17 @@ function Channel(name, owner, history) {
     // Simple structure message {from, text, date}
     this.history = history || [];
     
+    this.deleted = false;
+    
+    this.delete = () => {
+        this.deleted = true;
+    };
+    
     this.toShortJSON = () => {
         return {
             name: this.name,
             owner: this.owner,
+            deleted: this.deleted
         };
     };
     

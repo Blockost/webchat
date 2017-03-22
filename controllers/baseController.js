@@ -3,11 +3,7 @@ let crypto = require('crypto');
 let db = require('../db');
 
 // Login page
-router.get('/', requireNotAuth, (req, res) => {
-    // User already logged in, redirect it to chat page
-    if (req.session && req.session.user)
-        return res.redirect('/chat');
-
+router.get('/', requireNoAuth, (req, res) => {
     res.sendFile('index.xhtml', {root: './static/html/'});
 });
 
@@ -71,7 +67,7 @@ router.get('/logout', (req, res) => {
  * @param res The responds we'll send to the user
  * @param next The next delegate routing handler
  */
-function requireNotAuth(req, res, next) {
+function requireNoAuth(req, res, next) {
     if (req.session && req.session.user) {
         return res.redirect('/chat');
     }
