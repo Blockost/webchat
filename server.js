@@ -71,8 +71,11 @@ io.use((socket, next) => {
  * Initiate db connection
  */
 let mongodb_url = 'mongodb://localhost:27017/F21NA_se22_chat';
-db.connect(mongodb_url, (err) => {
-    if (err) throw err;
+db.connect(mongodb_url, (err) => {  
+    if (err) {
+        Logger.getInstance().log(err);
+        throw err;
+    }
     Logger.getInstance().log('-- Connected to ' + mongodb_url);
 });
 

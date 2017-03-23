@@ -1,6 +1,7 @@
 let router = require('express').Router();
 let crypto = require('crypto');
 let db = require('../db');
+let Logger = require('../Logger');
 
 // Login page
 router.get('/', requireNoAuth, (req, res) => {
