@@ -26,6 +26,7 @@ let sessions = require('express-session');
 let db = require('./db');
 let utils = require('./static/js/utils');
 let Channel = require('./static/js/channel');
+let Logger = require('./Logger');
 
 /*********************/
 /**** Variables ****/
@@ -72,7 +73,7 @@ io.use((socket, next) => {
 let mongodb_url = 'mongodb://localhost:27017/F21NA_se22_chat';
 db.connect(mongodb_url, (err) => {
     if (err) throw err;
-    console.log('-- Connected to ' + mongodb_url);
+    Logger.getInstance().log('-- Connected to ' + mongodb_url);
 });
 
 // Controllers middleware
@@ -85,6 +86,7 @@ app.use(require('./controllers/baseController'));
 io.on('connection', (socket) => {
 
     socket.username = socket.request.session.user;
+    Logger.getInstance().log('User <' + socket.username + '> has connected');
     socket.color = utils.getRandomColor();
 
     // Send updated username + 'unique' custom color
@@ -140,7 +142,6 @@ io.on('connection', (socket) => {
             channels_pool.push(channel);
             // Broadcast to all sockets the new channel
             io.emit('channel_added', channel.toShortJSON());
-            console.log(JSON.stringify(channels_pool));
         }
     });
 
@@ -185,6 +186,7 @@ io.on('connection', (socket) => {
     socket.on('disconnect', function () {
         clients_pool.splice(clients_pool.indexOf(socket), 1);
         sendMembersUpdate();
+        Logger.getInstance().log('User <' + socket.username + '> has disconnected. Bye!');
     });
 });
 
@@ -216,7 +218,13 @@ function getChannelByName(name) {
 /*** SERVER START ***/
 /********************/
 http.listen(3000, () => {
-    console.log('Server running on *:3000');
+    Logger.getInstance().log('Server running on *:3000');
+    
+});
+
+http.on('close', (err) => {
+    if(err) throw err;
+    Logger.getInstance().log('server shutdown');
 });
 
 
