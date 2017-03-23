@@ -21,33 +21,37 @@ router.post('/login', (req, res) => {
     db.getUser(username, (err, user) => {
 
         if (err) Logger.getInstance().log(err, 'ERROR');
+        else {
 
-        // User found: user must not be already authenticated
-        // AND passwords must match
-        if (user) {
+            // User found: user must not be already authenticated
+            // AND passwords must match
+            if (user) {
+                const hash = crypto.createHash('sha256');
+                const hashed_pwd = hash.update(password).digest('base64');
+                if (hashed_pwd === user.password) {
+                    req.session.user = username;
+                    return res.send({
+                        message: 'User authenticated',
+                        redirectTo: '/chat'
+                    });
+                }
+                return res.send({message: 'Passwords mismatch'});
+            }
+
+            // User not found: let's create it!
             const hash = crypto.createHash('sha256');
             const hashed_pwd = hash.update(password).digest('base64');
-            if (hashed_pwd === user.password) {
-                req.session.user = username;
-                return res.send({
-                    message: 'User authenticated',
-                    redirectTo: '/chat'
-                });
-            }
-            return res.send({message: 'Passwords mismatch'});
-        }
-
-        // User not found: let's create it!
-        const hash = crypto.createHash('sha256');
-        const hashed_pwd = hash.update(password).digest('base64');
-        db.insertUser(username, hashed_pwd, (err) => {
-            if (err) Logger.getInstance().log(err, 'ERROR');
-            req.session.user = username;
-            return res.send({
-                message: 'User created',
-                redirectTo: '/chat'
+            db.insertUser(username, hashed_pwd, (err) => {
+                if (err) Logger.getInstance().log(err, 'ERROR');
+                else {
+                    req.session.user = username;
+                    return res.send({
+                        message: 'User created',
+                        redirectTo: '/chat'
+                    });
+                }
             });
-        });
+        }
 
     });
 });

@@ -72,7 +72,7 @@ io.use((socket, next) => {
 let mongodb_url = 'mongodb://localhost:27017/F21NA_se22_chat';
 db.connect(mongodb_url, (err) => {
     if (err) Logger.getInstance().log(err, 'ERROR');
-    Logger.getInstance().log('-- Connected to ' + mongodb_url);
+    else Logger.getInstance().log('-- Connected to ' + mongodb_url);
 });
 
 // Controllers middleware
