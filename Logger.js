@@ -15,10 +15,9 @@ let logger = (options) => {
         console.log(message);
         fs.appendFile(this.path, message + '\n', this.enc, (err) => {
             if (err) console.error("Couldn't write into '" + this.path + "'");
+            if (log_level === 'ERROR')
+                throw message;
         });
-
-        if (log_level === 'ERROR')
-            throw message;
     };
 
     return this;
