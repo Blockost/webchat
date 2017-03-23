@@ -26,12 +26,13 @@ let sessions = require('express-session');
 let db = require('./db');
 let utils = require('./static/js/utils');
 let Channel = require('./static/js/channel');
+let ClientPool = require('./static/js/ClientPool');
 let Logger = require('./Logger');
 
 /*********************/
 /**** Variables ****/
 /*********************/
-let clients_pool = [];
+let clients_pool = new ClientPool();
 let channels_pool = [new Channel('general', 'root')];
 
 
@@ -90,7 +91,7 @@ io.on('connection', (socket) => {
 
     // Send updated username + 'unique' custom color
     socket.emit('username_verified', {
-        name: socket.username, color: socket.color
+        username: socket.username, color: socket.color
     });
 
     // Update clients array
@@ -185,7 +186,7 @@ io.on('connection', (socket) => {
 
     // Client has disconnected
     socket.on('disconnect', function () {
-        clients_pool.splice(clients_pool.indexOf(socket), 1);
+        clients_pool.remove(socket);
         sendMembersUpdate();
         Logger.getInstance().log('User <' + socket.username + '> has disconnected. Bye!');
     });
@@ -197,9 +198,7 @@ io.on('connection', (socket) => {
  * In order to update the channel_members div (right panel)
  */
 function sendMembersUpdate() {
-    io.emit('members_update', clients_pool.map((socket) => {
-        return {name: socket.username, color: socket.color};
-    }));
+    io.emit('members_update', clients_pool.getClients());
 }
 
 /**

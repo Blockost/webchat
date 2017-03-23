@@ -17,8 +17,8 @@ let last_message;
 
 socket.on('username_verified', (user) => {
     let profile_picture = $('.channels_panel_header>.user');
-    socket.username = user.name;
-    profile_picture.append(buildUserRow(user.name, user.color));
+    socket.username = user.username;
+    profile_picture.append(buildUserRow(user.username, user.color));
 });
 
 
@@ -31,7 +31,7 @@ socket.on('members_update', (members) => {
 
     $members_list.empty();
     members.forEach((member) => {
-        $members_list.append(buildUserRow(member.name, member.color).addClass('hoverable'));
+        $members_list.append(buildUserRow(member.username, member.color).addClass('hoverable'));
     });
 });
 
@@ -42,7 +42,7 @@ socket.on('message', (message) => {
 
     if (message.channel === socket.currentChannel) {
 
-        let channel = getChannelSocketByName(socket.currentChannel);
+        let channel = socket.rooms[getChannelIndexByName(socket.currentChannel)];
         last_message = channel.last_message;
         // Create a handful message object
         message = new Message(message.from, message.text, message.date, message.color);
@@ -70,7 +70,7 @@ socket.on('message', (message) => {
  */
 socket.on('channel_joined', (channel) => {
 
-    if (!getChannelSocketByName(channel.name))
+    if (getChannelIndexByName(channel.name) == -1)
         socket.rooms.push({name: channel.name});
 
     socket.currentChannel = channel.name;
@@ -98,7 +98,7 @@ socket.on('channel_joined', (channel) => {
  * On channel left
  */
 socket.on('channel_left', (channel) => {
-    socket.rooms.splice(getChannelSocketByName(channel.name), 1);
+    socket.rooms.splice(getChannelIndexByName(channel.name), 1);
 
     /**
      * If this event doesn't come from a 'channel_deleted' event:
@@ -193,7 +193,7 @@ function buildChannelRow(channel_name, channel_owner) {
 
     // If socket is in the channel
     // allows leaving it
-    if (getChannelSocketByName(channel_name))
+    if (getChannelIndexByName(channel_name) != -1)
         var $btn_leave = $('<button>').addClass('btn btn_leave').click(leaveChannel)
             .append($('<i>').addClass('fa fa-external-link'));
 
@@ -229,13 +229,13 @@ function getChannelRowByName(channel_name) {
         .find('.channel_row[id="' + channel_name + '"]');
 }
 
-function getChannelSocketByName(channel_name) {
+function getChannelIndexByName(channel_name) {
     for (let i = 0; i < socket.rooms.length; i++) {
         let channel = socket.rooms[i];
         if (channel.name == channel_name)
-            return channel;
+            return i;
     }
-    return null;
+    return -1;
 }
 
 function selectChannel(event) {
