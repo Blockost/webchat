@@ -14,13 +14,13 @@ router.post('/login', (req, res) => {
     let username = req.body.username || '';
     let password = req.body.password || '';
 
-    if(username.length < 4 || password < 4){
+    if (username.length < 4 || password < 4) {
         return res.send({message: 'Username or password too short'});
     }
 
     db.getUser(username, (err, user) => {
 
-        if (err) throw err;
+        if (err) Logger.getInstance().log(err, 'ERROR');
 
         // User found: user must not be already authenticated
         // AND passwords must match
@@ -41,7 +41,7 @@ router.post('/login', (req, res) => {
         const hash = crypto.createHash('sha256');
         const hashed_pwd = hash.update(password).digest('base64');
         db.insertUser(username, hashed_pwd, (err) => {
-            if (err) throw err;
+            if (err) Logger.getInstance().log(err, 'ERROR');
             req.session.user = username;
             return res.send({
                 message: 'User created',

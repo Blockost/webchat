@@ -44,7 +44,6 @@ app.use('/static', express.static(__dirname + '/static'));
 app.use('/node_modules', express.static(__dirname + '/node_modules'));
 
 
-
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({extended: false}));
 
@@ -71,11 +70,8 @@ io.use((socket, next) => {
  * Initiate db connection
  */
 let mongodb_url = 'mongodb://localhost:27017/F21NA_se22_chat';
-db.connect(mongodb_url, (err) => {  
-    if (err) {
-        Logger.getInstance().log(err);
-        throw err;
-    }
+db.connect(mongodb_url, (err) => {
+    if (err) Logger.getInstance().log(err, 'ERROR');
     Logger.getInstance().log('-- Connected to ' + mongodb_url);
 });
 
@@ -110,7 +106,7 @@ io.on('connection', (socket) => {
     socket.emit('channels_update');
 
     // Send to socket all the channels available
-    for(let c of channels_pool){
+    for (let c of channels_pool) {
         socket.emit('channel_added', c.toShortJSON());
     }
 
@@ -140,7 +136,7 @@ io.on('connection', (socket) => {
     // Client wants to create a new channel
     socket.on('add_channel', (channel_name) => {
         channel_name = channel_name.trim();
-        if(channel_name !== '' && !getChannelByName(channel_name)){
+        if (channel_name !== '' && !getChannelByName(channel_name)) {
             let channel = new Channel(channel_name, socket.username);
             channels_pool.push(channel);
             // Broadcast to all sockets the new channel
