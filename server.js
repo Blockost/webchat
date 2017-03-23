@@ -142,6 +142,7 @@ io.on('connection', (socket) => {
             channels_pool.push(channel);
             // Broadcast to all sockets the new channel
             io.emit('channel_added', channel.toShortJSON());
+            Logger.getInstance().log('New channel added: #' + channel_name + ' by ' + socket.username);
         }
     });
 
@@ -153,6 +154,7 @@ io.on('connection', (socket) => {
             // Warn user that he has successfully joined this channel
             // and send it its history
             socket.emit('channel_joined', channel.toJSON());
+            Logger.getInstance().log('User <' + socket.username + '> joined #' + channel_name);
         }
     });
 
@@ -161,6 +163,7 @@ io.on('connection', (socket) => {
         if (channel) {
             socket.leave(channel_name);
             socket.emit('channel_left', getChannelByName(channel_name).toShortJSON());
+            Logger.getInstance().log('User <' + socket.username + '> left #' + channel_name);
         }
     });
 
@@ -176,8 +179,7 @@ io.on('connection', (socket) => {
             io.in(channel_name).emit('channel_left', channel.toJSON());
 
             channels_pool.splice(channels_pool.indexOf(channel), 1);
-            console.log("delete channel <" + channel_name + ">");
-            console.log(JSON.stringify(channels_pool));
+            Logger.getInstance().log('User <' + socket.username + '> has deleted its channel #' + channel_name);
         }
 
     });
@@ -219,12 +221,5 @@ function getChannelByName(name) {
 /********************/
 http.listen(3000, () => {
     Logger.getInstance().log('Server running on *:3000');
-    
 });
-
-http.on('close', (err) => {
-    if(err) throw err;
-    Logger.getInstance().log('server shutdown');
-});
-
 

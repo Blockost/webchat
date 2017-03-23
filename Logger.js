@@ -11,10 +11,10 @@ let logger = (options) => {
     this.enc = this.options.enc || enc;
     
     this.log = (message) => {
-        message = new Date().toTimeString() + '> ' + message + '\n',
+        message = new Date() + '> ' + message,
         console.log(message);
         fs.appendFile(this.path, message + '\n', this.enc, (err) => {
-            if (err) console.err("Couldn't write into '" + this.path + "'");
+            if (err) console.error("Couldn't write into '" + this.path + "'");
         });
     };
     
