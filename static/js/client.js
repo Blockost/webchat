@@ -80,6 +80,8 @@ socket.on('channel_joined', (channel) => {
 
     // Update chat header
     $channel_header_name.text('#' + channel.name);
+    //TODO Add users' avatar here!
+    console.log(channel.users);
 
     $msg_container.empty();
     last_message = undefined;
@@ -240,7 +242,8 @@ function getChannelIndexByName(channel_name) {
 
 function selectChannel(event) {
     let channel_name = $(event.target).attr('id');
-    socket.emit('join_channel', channel_name);
+    if(socket.currentChannel != channel_name)
+        socket.emit('join_channel', channel_name);
 }
 
 function leaveChannel(event) {

@@ -211,6 +211,17 @@
 
 /* Message style */
 
+.msg_system {
+    font-size: 13px;
+    color: #888;
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
+
+.msg_system:hover {
+    color: #fff;
+}
+
 .msg_row {
     padding-top: 10px;
     padding-bottom: 20px;
@@ -355,5 +366,3 @@
     box-shadow: 0 0 10px 0.5px #0084ff, 0 0 10px 1px #0084ff inset;
     opacity: 1;
 }
-
-/****** NEW FONTS ******/

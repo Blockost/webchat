@@ -3,7 +3,7 @@
  */
 
 /**
- * Practical class for messages manipulation
+ * Practical class for message manipulation
  * @param {String} from is the message's emitter
  * @param {String} text is what the emitter wants to say
  * @param {Date} date is time emitter has sent this message
@@ -37,16 +37,22 @@ function Message(from, text, date, color) {
     };
 
     this.buildFullMessage = () => {
-        
-        let $msg_group = $('<div>').addClass('msg_group')
-            .append($('<span>').addClass('msg_sender').text(this.from))
-            .append($('<span>').addClass('msg_time').text(getTimeOnly(this.date)))
-            .append($('<p>').text(this.text));
 
-        return $('<div>').addClass('msg_row')
-            .append($('<div>').addClass('avatar ' + color)
-                .append($('<div>').addClass('avatar_name').text(this.from.charAt(0))))
-            .append($msg_group);
+        /* This is a message send by the server */
+        if (this.from === 'system') {
+            return $('<p>').addClass('msg_system').text(this.text);
+        } else {
+            /* Message from a real user */
+            let $msg_group = $('<div>').addClass('msg_group')
+                .append($('<span>').addClass('msg_sender').text(this.from))
+                .append($('<span>').addClass('msg_time').text(getTimeOnly(this.date)))
+                .append($('<p>').text(this.text));
+
+            return $('<div>').addClass('msg_row')
+                .append($('<div>').addClass('avatar ' + color)
+                    .append($('<div>').addClass('avatar_name').text(this.from.charAt(0))))
+                .append($msg_group);
+        }
     };
 
     this.toString = () => {

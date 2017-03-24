@@ -86,7 +86,7 @@ app.use(require('./controllers/baseController'));
 io.on('connection', (socket) => {
 
     socket.username = socket.request.session.user;
-    Logger.getInstance().log('User <' + socket.username + '> has connected');
+    Logger.getInstance().log(socket.username + ' has connected');
     socket.color = utils.getRandomColor();
 
     // Send updated username + 'unique' custom color
@@ -101,8 +101,7 @@ io.on('connection', (socket) => {
 
     // Automatically connect it to 'general' channel
     let channel_general = channels_pool[0];
-    socket.join(channel_general.name);
-    socket.emit('channel_joined', channel_general.toJSON());
+    onChannelJoin(socket, channel_general);
 
     socket.emit('channels_update');
 
@@ -113,7 +112,7 @@ io.on('connection', (socket) => {
 
 
     // Client sent a message
-    socket.on('message', function (message) {
+    socket.on('message', (message) => {
 
         // No broadcast of empty messages
         // or message sent to imaginary channel
@@ -148,23 +147,14 @@ io.on('connection', (socket) => {
 
     socket.on('join_channel', (channel_name) => {
         let channel = getChannelByName(channel_name);
-        if (channel) {
-            socket.join(channel_name);
-            socket.currentChannel = channel_name;
-            // Warn user that he has successfully joined this channel
-            // and send it its history
-            socket.emit('channel_joined', channel.toJSON());
-            Logger.getInstance().log('User <' + socket.username + '> joined #' + channel_name);
-        }
+        if (channel)
+            onChannelJoin(socket, channel);
     });
 
     socket.on('leave_channel', (channel_name) => {
         let channel = getChannelByName(channel_name);
-        if (channel) {
-            socket.leave(channel_name);
-            socket.emit('channel_left', getChannelByName(channel_name).toShortJSON());
-            Logger.getInstance().log('User <' + socket.username + '> left #' + channel_name);
-        }
+        if (channel)
+            onChannelLeave(socket, channel)
     });
 
     socket.on('delete_channel', (channel_name) => {
@@ -176,22 +166,62 @@ io.on('connection', (socket) => {
             // Send a confirmation to each sockets in this channel
             // Every socket will leave the channel
             io.emit('channel_deleted', channel_name);
-            io.in(channel_name).emit('channel_left', channel.toJSON());
+            io.in(channel_name).emit('channel_left', channel.toShortJSON());
 
             channels_pool.splice(channels_pool.indexOf(channel), 1);
-            Logger.getInstance().log('User <' + socket.username + '> has deleted its channel #' + channel_name);
+            Logger.getInstance().log(socket.username + ' has deleted its channel #' + channel_name);
         }
 
     });
 
     // Client has disconnected
-    socket.on('disconnect', function () {
+    socket.on('disconnect', () => {
         clients_pool.remove(socket);
         sendMembersUpdate();
-        Logger.getInstance().log('User <' + socket.username + '> has disconnected. Bye!');
+        Logger.getInstance().log(socket.username + ' has disconnected. Bye!');
     });
 });
 
+
+function onChannelJoin(socket, channel) {
+
+    socket.join(channel.name);
+    socket.currentChannel = channel.name;
+
+
+
+    /* If the user is not already in the channel */
+    if(!channel.isIn(socket)) {
+        let text = socket.username + ' joined #' + channel.name;
+        let message = buildSystemMessage(text, channel.name);
+        socket.send(message);
+        channel.history.push(message);
+
+        Logger.getInstance().log(text);
+    }
+
+    // Warn user that he has successfully joined this channel
+    // and send it its history
+    channel.join(socket);
+    socket.emit('channel_joined', channel.toJSON());
+    
+
+}
+
+
+function onChannelLeave(socket, channel){
+    socket.leave(channel.name);
+    socket.emit('channel_left', channel.toShortJSON());
+    
+    channel.leave(socket);
+    
+    let text = socket.username + ' left #' + channel.name;
+    let message = buildSystemMessage(text, channel.name);
+    socket.send(buildSystemMessage(message));
+    channel.history.push(message);
+
+    Logger.getInstance().log(text);
+}
 
 /**
  * Send all members (username + special color) to clients
@@ -211,6 +241,11 @@ function getChannelByName(name) {
         if (channel.name === name) return channel;
     }
     return null;
+}
+
+
+function buildSystemMessage(message, channel_name) {
+    return {from: 'system', text: message, channel: channel_name};
 }
 
 
