@@ -5,7 +5,7 @@ let Logger = require('../Logger');
 
 // Login page
 router.get('/', requireNoAuth, (req, res) => {
-    res.sendFile('index.xhtml', {root: './static/html/'});
+    res.sendFile('index.xhtml', {root: __dirname + '/../static/html/'});
 });
 
 router.post('/login', (req, res) => {
@@ -59,11 +59,11 @@ router.post('/login', (req, res) => {
 
 // Chat page - Need to be authenticated to access it
 router.get('/chat', requireAuth, (req, res) => {
-    res.sendFile('/chat.xhtml', {root: './static/html/'});
+    res.sendFile('/chat.xhtml', {root: __dirname + '/../static/html/'});
 });
 
 router.get('/about', (req, res) => {
-    res.sendFile('/about.xhtml', {root: './static/html/'});
+    res.sendFile('/about.xhtml', {root: __dirname + '/../static/html/'});
 });
 
 router.get('/logout', (req, res) => {
