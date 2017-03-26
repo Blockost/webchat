@@ -11,12 +11,13 @@ socket.rooms = [];
 
 let $msg_container = $('.messages_container');
 let $channels_container = $('.channels_container');
+let $channel_members = $('.channel_members');
 let $channel_header_name = $('.channel_header_name');
 let $msg_input = $('#message_input');
 let last_message;
 
 socket.on('username_verified', (user) => {
-    let profile_picture = $('.channels_panel_header>.user');
+    let profile_picture = $('.channels_panel_header > .user');
     socket.username = user.username;
     profile_picture.append(buildUserRow(user.username, user.color));
 });
@@ -30,8 +31,10 @@ socket.on('members_update', (members) => {
     $members_online.text('Online (all channels): ' + members.length);
 
     $members_list.empty();
+    let user_row;
     members.forEach((member) => {
-        $members_list.append(buildUserRow(member.username, member.color).addClass('hoverable'));
+        user_row = buildUserRow(member.username, member.color);
+        $members_list.append(user_row.addClass('hoverable'));
     });
 });
 
@@ -65,6 +68,14 @@ socket.on('message', (message) => {
 });
 
 
+socket.on('channel_members_update', (users) => {
+    $channel_members.empty();
+    users.forEach((user) => {
+        $channel_members.append(buildAvatar(user.username, user.color));
+    });
+});
+
+
 /**
  * On channel joined
  */
@@ -80,8 +91,7 @@ socket.on('channel_joined', (channel) => {
 
     // Update chat header
     $channel_header_name.text('#' + channel.name);
-    //TODO Add users' avatar here!
-    console.log(channel.users);
+
 
     $msg_container.empty();
     last_message = undefined;
@@ -112,6 +122,7 @@ socket.on('channel_left', (channel) => {
 
     if (channel.name === socket.currentChannel) {
         $msg_container.empty();
+        $channel_members.empty();
         $channel_header_name.empty();
         socket.currentChannel = '';
     }
@@ -172,6 +183,12 @@ function scrollToBottom($div) {
 }
 
 
+function buildAvatar(username, color) {
+    return $('<div>').addClass('avatar ' + color)
+        .append($('<div>').addClass('avatar_name')
+            .text(username.charAt(0)))
+}
+
 /**
  * Construct a user row (avatar + username) as a Jquery object (DOM Tree)
  * @param username client's name
@@ -179,9 +196,9 @@ function scrollToBottom($div) {
  * @returns {JQuery} The created 'JQuery' DOM tree
  */
 function buildUserRow(username, color) {
+    let avatar = buildAvatar(username, color);
     return $('<div>').addClass('user_row')
-        .append($('<div>').addClass('avatar ' + color)
-            .append($('<div>').addClass('avatar_name').text(username.charAt(0))))
+        .append(avatar)
         .append($('<div>').addClass('user_name').text(username));
 }
 
@@ -242,7 +259,7 @@ function getChannelIndexByName(channel_name) {
 
 function selectChannel(event) {
     let channel_name = $(event.target).attr('id');
-    if(socket.currentChannel != channel_name)
+    if (socket.currentChannel != channel_name)
         socket.emit('join_channel', channel_name);
 }
 

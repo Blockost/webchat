@@ -53,7 +53,7 @@ let sessionMiddleware = sessions({
     maxAge: 30 * 60 * 1000, // cookie lives for 30 min
     httpOnly: true, // Cookies cannot be accessed via Javascript
     resave: false, // Do not resave a cookie if not modified during a request
-    saveUninitialized: false, // Don't save unmodified cookies
+    saveUninitialized: false // Don't save unmodified cookies
 });
 
 
@@ -85,8 +85,13 @@ app.use(require('./controllers/baseController'));
  */
 io.on('connection', (socket) => {
 
+    // If a session has been append to the socket,
+    // return immediately
+    if (!socket.request || !socket.request.session)
+        return;
+
     socket.username = socket.request.session.user;
-    Logger.getInstance().log(socket.username + ' has connected');
+    Logger.getInstance().log(socket.username + ' connected');
     socket.color = utils.getRandomColor();
 
     // Send updated username + 'unique' custom color
@@ -163,10 +168,8 @@ io.on('connection', (socket) => {
 
             channel.delete();
 
-            // Send a confirmation to each sockets in this channel
-            // Every socket will leave the channel
+            // Send a confirmation to all sockets
             io.emit('channel_deleted', channel_name);
-            io.in(channel_name).emit('channel_left', channel.toShortJSON());
 
             channels_pool.splice(channels_pool.indexOf(channel), 1);
             Logger.getInstance().log(socket.username + ' has deleted its channel #' + channel_name);
@@ -177,10 +180,24 @@ io.on('connection', (socket) => {
     // Client has disconnected
     socket.on('disconnect', () => {
         clients_pool.remove(socket);
+        channels_pool.forEach((channel) => {
+            let text = buildLeaveMessage(socket.username, channel.name);
+            let message = buildSystemMessage(text, channel.name);
+            channel.leave(socket, message);
+        });
+
         sendMembersUpdate();
         Logger.getInstance().log(socket.username + ' has disconnected. Bye!');
     });
 });
+
+function buildJoinMessage(username, channel_name) {
+    return username + ' joined #' + channel_name;
+}
+
+function buildLeaveMessage(username, channel_name) {
+    return username + ' left #' + channel_name;
+}
 
 
 function onChannelJoin(socket, channel) {
@@ -188,37 +205,25 @@ function onChannelJoin(socket, channel) {
     socket.join(channel.name);
     socket.currentChannel = channel.name;
 
+    let text = buildJoinMessage(socket.username, channel.name);
+    let message = buildSystemMessage(text, channel.name);
 
+    Logger.getInstance().log(text);
 
-    /* If the user is not already in the channel */
-    if(!channel.isIn(socket)) {
-        let text = socket.username + ' joined #' + channel.name;
-        let message = buildSystemMessage(text, channel.name);
-        socket.send(message);
-        channel.history.push(message);
-
-        Logger.getInstance().log(text);
-    }
-
-    // Warn user that he has successfully joined this channel
-    // and send it its history
-    channel.join(socket);
-    socket.emit('channel_joined', channel.toJSON());
-    
+    channel.join(socket, message);
 
 }
 
 
-function onChannelLeave(socket, channel){
+function onChannelLeave(socket, channel) {
     socket.leave(channel.name);
-    socket.emit('channel_left', channel.toShortJSON());
-    
-    channel.leave(socket);
-    
-    let text = socket.username + ' left #' + channel.name;
+
+    if (socket.currentChannel == channel.name)
+        socket.currentChannel = '';
+
+    let text = buildLeaveMessage(socket.username, channel.name);
     let message = buildSystemMessage(text, channel.name);
-    socket.send(buildSystemMessage(message));
-    channel.history.push(message);
+    channel.leave(socket, message);
 
     Logger.getInstance().log(text);
 }

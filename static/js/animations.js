@@ -4,7 +4,7 @@
 
 function togglePanel(btn) {
     let $btn = $(btn);
-    let $channel_members = $('.channel_members');
+    let $channel_members = $('.global_members');
     let $chat_panel = $('.chat_panel');
 
     if ($channel_members.css('display') === 'none') {
