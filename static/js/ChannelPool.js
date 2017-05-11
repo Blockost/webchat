@@ -1,7 +1,3 @@
-/**
- * Authors: Simon ESPIGOLÉ, Teddy GILBERT, Hugo LEGRAND
- */
-
 function ChannelPool() {
 
     this.pool = [];

@@ -62,10 +62,6 @@ router.get('/chat', requireAuth, (req, res) => {
     res.sendFile('/chat.xhtml', {root: __dirname + '/../static/html/'});
 });
 
-router.get('/about', (req, res) => {
-    res.sendFile('/about.xhtml', {root: __dirname + '/../static/html/'});
-});
-
 router.get('/logout', (req, res) => {
     req.session.destroy();
     res.redirect('/');

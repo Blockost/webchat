@@ -1,7 +1,3 @@
-/**
- * Authors: Simon ESPIGOLÉ, Teddy GILBERT, Hugo LEGRAND
- */
-
 function togglePanel(btn) {
     let $btn = $(btn);
     let $channel_members = $('.global_members');

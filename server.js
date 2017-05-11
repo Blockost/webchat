@@ -1,7 +1,3 @@
-/**
- * Authors: Simon ESPIGOLÉ, Teddy GILBERT, Hugo LEGRAND
- */
-
 /*********************/
 /* Libs stack ***/
 
@@ -69,7 +65,6 @@ io.use((socket, next) => {
 
 /**
  * Initiate db connection
- * Prod url: mongodb://se22:abcse22354@mongo-server-1/se22
  */
 let mongodb_url = 'mongodb://localhost:27017/F21NA_se22_chat';
 db.connect(mongodb_url, (err) => {

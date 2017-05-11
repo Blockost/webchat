@@ -1,7 +1,3 @@
-/**
- * Authors: Simon ESPIGOLÉ, Teddy Gilbert, Hugo LEGRAND
- */
-
 let socket = io();
 socket.rooms = [];
 
