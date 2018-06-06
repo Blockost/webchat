@@ -1,0 +1,47 @@
+Tue Jun 05 2018 18:48:57 GMT-0400 (Eastern Daylight Time)> Server running on *:3000
+Tue Jun 05 2018 18:48:58 GMT-0400 (Eastern Daylight Time)> MongoError: failed to connect to server [localhost:27017] on first connect [MongoError: connect ECONNREFUSED 127.0.0.1:27017]
+Tue Jun 05 2018 18:48:58 GMT-0400 (Eastern Daylight Time)> -- Connected to mongodb://localhost:27017/F21NA_se22_chat
+Tue Jun 05 2018 19:17:43 GMT-0400 (Eastern Daylight Time)> Server running on *:3000
+Tue Jun 05 2018 19:17:44 GMT-0400 (Eastern Daylight Time)> -- Connected to mongodb://localhost:27017/F21NA_se22_chat
+Tue Jun 05 2018 19:17:44 GMT-0400 (Eastern Daylight Time)> MongoError: failed to connect to server [localhost:27017] on first connect [MongoError: connect ECONNREFUSED 127.0.0.1:27017]
+Tue Jun 05 2018 19:19:16 GMT-0400 (Eastern Daylight Time)> Server running on *:3000
+Tue Jun 05 2018 19:19:17 GMT-0400 (Eastern Daylight Time)> MongoError: failed to connect to server [localhost:27017] on first connect [MongoError: connect ECONNREFUSED 127.0.0.1:27017]
+Tue Jun 05 2018 19:19:17 GMT-0400 (Eastern Daylight Time)> -- Connected to mongodb://localhost:27017
+Tue Jun 05 2018 19:20:58 GMT-0400 (Eastern Daylight Time)> Server running on *:3000
+Tue Jun 05 2018 19:20:59 GMT-0400 (Eastern Daylight Time)> MongoError: failed to connect to server [localhost:27017] on first connect [MongoError: connect ECONNREFUSED 127.0.0.1:27017]
+Tue Jun 05 2018 19:20:59 GMT-0400 (Eastern Daylight Time)> -- Connected to mongodb://localhost:27017
+Tue Jun 05 2018 19:47:39 GMT-0400 (Eastern Daylight Time)> Server running on *:3000
+Tue Jun 05 2018 19:47:39 GMT-0400 (Eastern Daylight Time)> -- Connected to mongodb://localhost:27017
+Tue Jun 05 2018 19:48:46 GMT-0400 (Eastern Daylight Time)> Blockost connected
+Tue Jun 05 2018 19:48:46 GMT-0400 (Eastern Daylight Time)> Blockost joined #general
+Tue Jun 05 2018 19:49:37 GMT-0400 (Eastern Daylight Time)> Blockost connected
+Tue Jun 05 2018 19:49:37 GMT-0400 (Eastern Daylight Time)> Blockost joined #general
+Tue Jun 05 2018 19:49:41 GMT-0400 (Eastern Daylight Time)> Blockost has disconnected. Bye!
+Tue Jun 05 2018 19:50:01 GMT-0400 (Eastern Daylight Time)> Blockost left #general
+Tue Jun 05 2018 19:50:03 GMT-0400 (Eastern Daylight Time)> Blockost left #general
+Tue Jun 05 2018 19:50:07 GMT-0400 (Eastern Daylight Time)> New channel added: #Hi by Blockost
+Tue Jun 05 2018 19:50:09 GMT-0400 (Eastern Daylight Time)> Blockost joined #Hi
+Tue Jun 05 2018 19:50:10 GMT-0400 (Eastern Daylight Time)> Blockost joined #general
+Tue Jun 05 2018 19:50:13 GMT-0400 (Eastern Daylight Time)> Blockost joined #Hi
+Tue Jun 05 2018 19:50:14 GMT-0400 (Eastern Daylight Time)> Blockost joined #general
+Tue Jun 05 2018 19:50:15 GMT-0400 (Eastern Daylight Time)> Blockost left #general
+Tue Jun 05 2018 19:50:16 GMT-0400 (Eastern Daylight Time)> Blockost joined #Hi
+Tue Jun 05 2018 19:50:18 GMT-0400 (Eastern Daylight Time)> Blockost joined #general
+Tue Jun 05 2018 19:51:28 GMT-0400 (Eastern Daylight Time)> Server running on *:3000
+Tue Jun 05 2018 19:51:28 GMT-0400 (Eastern Daylight Time)> -- Connected to mongodb://localhost:27017/F21NA_se22_chat
+Tue Jun 05 2018 19:51:28 GMT-0400 (Eastern Daylight Time)> undefined connected
+Tue Jun 05 2018 19:51:28 GMT-0400 (Eastern Daylight Time)> undefined joined #general
+Tue Jun 05 2018 19:52:03 GMT-0400 (Eastern Daylight Time)> Blockost connected
+Tue Jun 05 2018 19:52:03 GMT-0400 (Eastern Daylight Time)> Blockost joined #general
+Tue Jun 05 2018 19:52:25 GMT-0400 (Eastern Daylight Time)> asdad connected
+Tue Jun 05 2018 19:52:25 GMT-0400 (Eastern Daylight Time)> asdad joined #general
+Tue Jun 05 2018 19:53:39 GMT-0400 (Eastern Daylight Time)> Server running on *:3000
+Tue Jun 05 2018 19:53:39 GMT-0400 (Eastern Daylight Time)> -- Connected to mongodb://localhost:27017/webchat
+Tue Jun 05 2018 19:54:22 GMT-0400 (Eastern Daylight Time)> Blockost connected
+Tue Jun 05 2018 19:54:22 GMT-0400 (Eastern Daylight Time)> Blockost joined #general
+Tue Jun 05 2018 20:45:48 GMT-0400 (Eastern Daylight Time)> Blockost has disconnected. Bye!
+Tue Jun 05 2018 23:16:41 GMT-0400 (Eastern Daylight Time)> Server running on *:3000
+Tue Jun 05 2018 23:16:41 GMT-0400 (Eastern Daylight Time)> -- Connected to mongodb://localhost:27017/webchat
+Tue Jun 05 2018 23:17:05 GMT-0400 (Eastern Daylight Time)> Blockost connected
+Tue Jun 05 2018 23:17:05 GMT-0400 (Eastern Daylight Time)> Blockost joined #general
+Tue Jun 05 2018 23:17:13 GMT-0400 (Eastern Daylight Time)> Blockost has disconnected. Bye!
