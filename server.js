@@ -3,6 +3,7 @@
 
 let express = require('express');
 let app = express();
+let path = require('path');
 let http = require('http').Server(app);
 let io = require('socket.io')(http);
 
@@ -38,6 +39,7 @@ let channels_pool = [new Channel('general', 'root')];
 
 // routing
 app.use('/static', express.static(__dirname + '/static'));
+app.use('/dist', express.static(__dirname + '/dist'));
 app.use('/node_modules', express.static(__dirname + '/node_modules'));
 
 
