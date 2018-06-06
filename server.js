@@ -66,7 +66,7 @@ io.use((socket, next) => {
 /**
  * Initiate db connection
  */
-let mongodb_url = 'mongodb://localhost:27017/F21NA_se22_chat';
+let mongodb_url = 'mongodb://localhost:27017/webchat';
 db.connect(mongodb_url, (err) => {
     if (err) Logger.getInstance().log(err, 'ERROR');
     else Logger.getInstance().log('-- Connected to ' + mongodb_url);
