@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 
 // Custom modules
 import { RoutingModule } from './modules/routing/routing.module';
+import { AngularMaterialModule } from './modules/angular-material/angular-material.module';
 
 // Custom components
 import { AppComponent } from './app.component';
@@ -11,7 +12,7 @@ import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.com
 
 @NgModule({
   declarations: [AppComponent, HomeComponent, PageNotFoundComponent],
-  imports: [BrowserModule, RoutingModule],
+  imports: [BrowserModule, RoutingModule, AngularMaterialModule],
   providers: [],
   bootstrap: [AppComponent]
 })
