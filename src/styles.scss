@@ -2,3 +2,11 @@
 
 /* Add angular material pre-build theme */
 @import '~@angular/material/prebuilt-themes/indigo-pink.css';
+
+/* Import Roboto font */
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+
+/* Common style */
+* {
+  font-family: 'Roboto';
+}
