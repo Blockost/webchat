@@ -1,6 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 // Custom modules
 import { RoutingModule } from './modules/routing/routing.module';
@@ -23,7 +22,6 @@ import { NavbarComponent } from './components/navbar/navbar.component';
   ],
   imports: [
     BrowserModule,
-    NgbModule.forRoot(),
     AngularMaterialModule,
     RoutingModule
   ],
