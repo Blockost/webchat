@@ -12,7 +12,7 @@ import {
 
 @NgModule({
   imports: [
-    BrowserAnimationsModule, // advanced animations of MD components
+    BrowserAnimationsModule, // advanced animations for MD components
     MatButtonModule,
     MatCheckboxModule,
     MatCardModule,
