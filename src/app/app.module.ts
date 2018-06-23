@@ -12,7 +12,7 @@ import { MessageService } from './services/message/message.service';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './pages/home/home.component';
 import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.component';
-import { ChatComponent } from './pages/chat/chat.component';
+import { ChatPageComponent } from './pages/chat/chat-page.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { InputComponent } from './components/input/input.component';
 import { GlobalMembersListComponent } from './components/global-members-list/global-members-list.component';
@@ -24,7 +24,7 @@ import { ChatPanelComponent } from './components/chat-panel/chat-panel.component
     AppComponent,
     HomeComponent,
     PageNotFoundComponent,
-    ChatComponent,
+    ChatPageComponent,
     NavbarComponent,
     InputComponent,
     GlobalMembersListComponent,
