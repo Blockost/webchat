@@ -15,6 +15,9 @@ import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.com
 import { ChatComponent } from './pages/chat/chat.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { InputComponent } from './components/input/input.component';
+import { GlobalMembersListComponent } from './components/global-members-list/global-members-list.component';
+import { ChannelsManagementPanelComponent } from './components/channels-management-panel/channels-management-panel.component';
+import { ChatPanelComponent } from './components/chat-panel/chat-panel.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +26,10 @@ import { InputComponent } from './components/input/input.component';
     PageNotFoundComponent,
     ChatComponent,
     NavbarComponent,
-    InputComponent
+    InputComponent,
+    GlobalMembersListComponent,
+    ChannelsManagementPanelComponent,
+    ChatPanelComponent
   ],
   imports: [BrowserModule, AngularMaterialModule, RoutingModule],
   providers: [MessageService],

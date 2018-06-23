@@ -1,0 +1,57 @@
+.channels_panel_header {
+  display: flex;
+  flex-direction: row;
+}
+
+.channels_panel_header > .user {
+  display: flex;
+  flex-direction: row;
+  flex-grow: 1;
+  justify-content: center;
+  align-items: flex-start;
+  flex-flow: column wrap;
+  word-break: break-all;
+}
+
+.channels_panel_content {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  align-content: space-between;
+}
+
+.channels_container {
+  flex: 1 0 80vh;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding: 15px 0px 15px 0px;
+}
+
+.channel_row {
+  width: 100%;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.channel_misc {
+  display: flex;
+  flex-direction: row;
+}
+
+.channel_header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.channel_header_name {
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.channel_members {
+  display: flex;
+  flex-flow: row nowrap;
+}

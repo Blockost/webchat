@@ -1,34 +1,15 @@
 <div id="main_panel">
-  <div class="main_panel_header header">
-    <div class="channel_header">
-      <h3 class="channel_header_name">#general</h3>
-      <div class="channel_members"></div>
-    </div>
-    <div>
-      <button class="btn btn_active" onclick="togglePanel(this)">
-        <i class="fa fa-users" aria-hidden="true"></i>
-      </button>
-    </div>
+
+  <div class="channel_list">
+    <app-channels-management-panel></app-channels-management-panel>
   </div>
 
-  <div class="main_panel_content">
+  <div class="chat_panel">
+    <app-chat-panel></app-chat-panel>
+  </div>
 
-    <div class="chat_panel">
-      <div class="messages_container">
-        <!-- Here will be all the chat messages -->
-        <p>{{inputMessage}}</p>
-      </div>
-      <div class="message_bar">
-        <form class="message_form" onsubmit="return false;">
-          <app-input #input></app-input>
-        </form>
-      </div>
-    </div>
-
-    <div class="global_members">
-      <div class="members_online"></div>
-      <div class="members_list"></div>
-    </div>
+  <div class="global_members">
+    <app-global-members-list></app-global-members-list>
   </div>
 
 </div>
