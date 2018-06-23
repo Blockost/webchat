@@ -6,7 +6,7 @@ import { RoutingModule } from './modules/routing/routing.module';
 import { AngularMaterialModule } from './modules/angular-material/angular-material.module';
 
 // Custom services
-import { MessageService } from './services/message.service';
+import { MessageService } from './services/message/message.service';
 
 // Custom components
 import { AppComponent } from './app.component';
