@@ -1,11 +1,11 @@
 .message_container {
   flex-direction: column;
   flex: 1 0 70vh;
+  flex-wrap: wrap;
   min-height: 70vh;
   max-height: 70vh;
   overflow: auto;
   padding: 15px;
-  border: 1px solid red;
 }
 
 /* Message style */
@@ -24,8 +24,6 @@
 .msg_row {
   display: flex;
   flex-direction: row;
-  padding-top: 10px;
-  padding-bottom: 20px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 }
 

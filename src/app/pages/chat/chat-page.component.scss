@@ -20,6 +20,7 @@
   display: flex;
   flex: 1 0 0;
   flex-direction: column;
+  border-right: 1px solid black;
 }
 
 // Chat panel is 5 times bigger than the channel management panel
@@ -35,6 +36,7 @@
   display: flex;
   flex: 1 0 0;
   flex-direction: column;
+  border-left: 1px solid black;
 }
 
 .badge {

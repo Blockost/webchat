@@ -13,12 +13,11 @@ export class ChatMessageFormComponent implements OnInit {
 
   ngOnInit() {}
 
-  getValue() {
-    return this.inputField.nativeElement.value;
-  }
+  onSubmit(message: string): boolean {
+    this.messageService.sendMessage(this.inputField.nativeElement.value);
 
-  submitMessage(message: string): boolean {
-    this.messageService.sendMessage(message);
+    // clear input field
+    this.inputField.nativeElement.value = '';
 
     // prevent page to reload when submitting the form
     return false;
