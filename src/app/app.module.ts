@@ -14,10 +14,10 @@ import { HomeComponent } from './pages/home/home.component';
 import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.component';
 import { ChatPageComponent } from './pages/chat/chat-page.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
-import { InputComponent } from './components/input/input.component';
 import { GlobalMembersListComponent } from './components/global-members-list/global-members-list.component';
 import { ChannelsManagementPanelComponent } from './components/channels-management-panel/channels-management-panel.component';
 import { ChatPanelComponent } from './components/chat-panel/chat-panel.component';
+import { ChatMessageFormComponent } from './components/chat-message-form/chat-message-form.component';
 
 @NgModule({
   declarations: [
@@ -26,10 +26,10 @@ import { ChatPanelComponent } from './components/chat-panel/chat-panel.component
     PageNotFoundComponent,
     ChatPageComponent,
     NavbarComponent,
-    InputComponent,
     GlobalMembersListComponent,
     ChannelsManagementPanelComponent,
-    ChatPanelComponent
+    ChatPanelComponent,
+    ChatMessageFormComponent
   ],
   imports: [BrowserModule, AngularMaterialModule, RoutingModule],
   providers: [MessageService],

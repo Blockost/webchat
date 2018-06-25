@@ -1,41 +1,12 @@
 <p>
   chat-panel works!
 </p>
-<div class="messages_container">
-  <p>Message container</p>
-  <p>Message container</p>
-  <p>Message container</p>
-  <p>Message container</p>
-  <p>Message container</p>
-  <p>Message container</p>
-  <p>Message container</p>
-  <p>Message container</p>
-  <p>Message container</p>
-  <p>Message container</p>
-  <p>Message container</p>
-  <p>Message container</p>
-  <p>Message container</p>
-  <p>Message container</p>
-  <p>Message container</p>
-  <p>Message container</p>
-  <p>Message container</p>
-  <p>Message container</p>
-  <p>Hello</p>
-  <p>Hello</p>
-  <p>Hello</p>
-  <p>Hello</p>
-  <p>Hello</p>
-  <p>Hello</p>
-  <p>Hello</p>
-  <p>Hello</p>
-  <p>Hello</p>
-  <p>Hello</p>
-  <p>Hello</p>
+<div class="message_container" #messageContainer>
   <!-- Here will be all the chat messages -->
-  <p>{{inputMessage}}</p>
+  <div class="msg_row" *ngFor="let message of messages">
+    <p>from: {{message.from}}, to: {{message.to}}, content: {{message.content}}</p>
+  </div>
 </div>
 <div class="message_bar">
-  <form class="message_form" onsubmit="return false;">
-    <app-input></app-input>
-  </form>
+  <app-chat-message-form></app-chat-message-form>
 </div>
